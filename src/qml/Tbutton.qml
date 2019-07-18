@@ -25,7 +25,7 @@ Button {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             anchors.fill: parent
-            font.pixelSize: 14
+            font.pixelSize: 16
         }
 
         // The line at bottom of button.
