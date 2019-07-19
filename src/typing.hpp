@@ -30,6 +30,15 @@ public slots:
     void setTimeLabel(QObject *timeLabel);
     void startTimer();
     void endTimer();
+    int getStartIndexOfNextWord(QString typedText);
+
+    // Calls after getStartIndexOfNextWord
+    int getNextWordLength();
+    bool isUserMadeMistake(QString typedText);
+
+    // Calls after isUserMadeMistake
+    bool getIndexOfFirstUserMisatke();
+
 
 private slots:
 

@@ -55,3 +55,19 @@ void Typing::endTimer() {
     m_qThread.quit();
     m_qThread.wait();
 }
+
+int Typing::getStartIndexOfNextWord(QString typedText) {
+    //TODO
+}
+
+int Typing::getNextWordLength() {
+    //TODO
+}
+
+bool Typing::isUserMadeMistake(QString typedText) {
+    //TODO
+}
+
+bool Typing::getIndexOfFirstUserMisatke() {
+    //TODO
+}
