@@ -12,6 +12,7 @@ Typing::Typing() {
 
 Typing::~Typing() {
     endTimer();
+    freePtr();
 }
 
 void Typing::timerSlot() {
@@ -68,6 +69,11 @@ bool Typing::isUserMadeMistake(QString typedText) {
     //TODO
 }
 
-int Typing::getIndexOfFirstUserMisatke() {
+int Typing::getIndexOfFirstMistakeOfUser() {
     //TODO
+}
+
+void Typing::freePtr() {
+    delete m_timer;
+    delete m_timeLabel;
 }

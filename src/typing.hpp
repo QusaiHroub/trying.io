@@ -37,8 +37,10 @@ public slots:
     bool isUserMadeMistake(QString typedText);
 
     // Calls after isUserMadeMistake
-    int getIndexOfFirstUserMisatke();
+    int getIndexOfFirstMistakeOfUser();
 
+    // To release memory.
+    void freePtr();
 
 private slots:
 
