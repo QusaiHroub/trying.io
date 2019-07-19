@@ -39,6 +39,9 @@ public slots:
     // Calls after isUserMadeMistake
     int getIndexOfFirstUserMisatke();
 
+    // To release memory.
+    void freePtr();
+
 
 private slots:
 
