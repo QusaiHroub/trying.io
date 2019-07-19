@@ -3,9 +3,14 @@
 
 #include <QObject>
 
-class UserProgress : public QObject
-{
+class UserProgress : public QObject {
     Q_OBJECT
+private:
+    int m_startIndexOfNextWord;
+    int m_NextWordLength;
+    int m_indexOfFirstMistakeOfUser;
+    bool m_userMadeMistake;
+
 public:
     explicit UserProgress(QObject *parent = nullptr);
     void setStartIndexOfNextWord(int startIndex);

@@ -5,33 +5,33 @@ UserProgress::UserProgress(QObject *parent) : QObject(parent) {
 }
 
 void UserProgress::setStartIndexOfNextWord(int startIndex) {
-    //TODO
+    m_startIndexOfNextWord = startIndex;
 }
 
 void UserProgress::setNextWordLength(int length) {
-    //TODO
+    m_NextWordLength = length;
 }
 
 void UserProgress::setIsUserMadeMistake(bool isMadeMistake) {
-    //TODO
+    m_userMadeMistake = isMadeMistake;
 }
 
 void UserProgress::setIndexOfFirstMistakeOfUser(int index) {
-    //TODO
+    m_indexOfFirstMistakeOfUser = index;
 }
 
 int UserProgress::getStartIndexOfNextWord() {
-    //TODO
+    return m_startIndexOfNextWord;
 }
 
 int UserProgress::getNextWordLength() {
-    //TODO
+    return m_NextWordLength;
 }
 
 bool UserProgress::isUserMadeMistake() {
-    //TODO
+    return m_userMadeMistake;
 }
 
 int UserProgress::getIndexOfFirstMistakeOfUser() {
-    //TODO
+    return m_indexOfFirstMistakeOfUser;
 }
