@@ -68,6 +68,6 @@ bool Typing::isUserMadeMistake(QString typedText) {
     //TODO
 }
 
-bool Typing::getIndexOfFirstUserMisatke() {
+int Typing::getIndexOfFirstUserMisatke() {
     //TODO
 }
