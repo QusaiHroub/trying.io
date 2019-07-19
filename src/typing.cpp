@@ -69,10 +69,9 @@ bool Typing::isUserMadeMistake(QString typedText) {
     //TODO
 }
 
-int Typing::getIndexOfFirstUserMisatke() {
+int Typing::getIndexOfFirstMistakeOfUser() {
     //TODO
 }
-
 
 void Typing::freePtr() {
     delete m_timer;
