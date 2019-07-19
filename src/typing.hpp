@@ -37,7 +37,7 @@ public slots:
     bool isUserMadeMistake(QString typedText);
 
     // Calls after isUserMadeMistake
-    bool getIndexOfFirstUserMisatke();
+    int getIndexOfFirstUserMisatke();
 
 
 private slots:
