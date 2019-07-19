@@ -7,6 +7,8 @@
 #include <QTimer>
 #include <QThread>
 
+#include "userprogress.hpp"
+
 class Typing: public QObject {
     Q_OBJECT
 private:
@@ -30,14 +32,7 @@ public slots:
     void setTimeLabel(QObject *timeLabel);
     void startTimer();
     void endTimer();
-    int getStartIndexOfNextWord(QString typedText);
-
-    // Calls after getStartIndexOfNextWord
-    int getNextWordLength();
-    bool isUserMadeMistake(QString typedText);
-
-    // Calls after isUserMadeMistake
-    int getIndexOfFirstMistakeOfUser();
+    QObject *getUserProgress(QString typedText);
 
     // To release memory.
     void freePtr();
