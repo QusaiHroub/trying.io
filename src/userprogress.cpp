@@ -1,3 +1,12 @@
+/* Typing.io
+*
+* This file is part of the Typing.io.
+*
+* Authors:
+* Qusai Hroub <qusaihroub.r@gmail.com>
+*
+*/
+
 #include "userprogress.hpp"
 
 UserProgress::UserProgress(QObject *parent) : QObject(parent) {

@@ -1,3 +1,12 @@
+/* Typing.io
+*
+* This file is part of the Typing.io.
+*
+* Authors:
+* Qusai Hroub <qusaihroub.r@gmail.com>
+*
+*/
+
 #ifndef USERPROGRESS_H
 #define USERPROGRESS_H
 
