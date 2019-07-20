@@ -46,6 +46,7 @@ Window {
     function start() {
         isStarted = true;
         typing.startTimer();
+        userProgress.initDateAndTime();
     }
 
     function end() {

@@ -52,3 +52,12 @@ void UserProgress::setIsEndTest(bool endTest) {
 bool UserProgress::isEndTest() {
     return m_endTest;
 }
+
+void UserProgress::initDateAndTime() {
+    QDateTime timeNow = QDateTime::currentDateTime();
+    m_dateAndTime = timeNow.toString(QStringLiteral("MM/dd/yy hh:mm:ss"));
+}
+
+QString UserProgress::getDateAndTime() {
+    return m_dateAndTime;
+}

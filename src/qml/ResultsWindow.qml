@@ -11,6 +11,8 @@ import QtQuick 2.7
 import QtQuick.Window 2.7
 import QtQuick.Controls 2.5
 import typing.io 0.1
+import typing.io.userprogress 0.1
+import typing.io.history 0.1
 
 Window {
     width: 640
@@ -19,12 +21,20 @@ Window {
 
     property Window mainWindow;
     property Typing typing;
+    property UserProgress userProgress: typing.getUserProgress()
+
+    History {
+        id: userHistory
+    }
 
     function init() {
         result.text = typing.getResult();
     }
 
     function finish() {
+        userHistory.loadHistory();
+        userHistory.appenToHistory(typing.getResult(), userProgress.getDateAndTime());
+        userHistory.saveHistory();
         mainWindow.show();
         hide();
     }

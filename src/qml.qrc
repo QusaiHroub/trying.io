@@ -5,5 +5,6 @@
         <file>qml/UploadSourceCodeWindow.qml</file>
         <file>qml/PracticeInterfaceWindow.qml</file>
         <file>qml/ResultsWindow.qml</file>
+        <file>qml/HistoryWindow.qml</file>
     </qresource>
 </RCC>

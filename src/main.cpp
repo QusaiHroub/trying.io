@@ -14,6 +14,7 @@
 
 #include "typing.hpp"
 #include "userprogress.hpp"
+#include "history.hpp"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -49,6 +50,12 @@ int main(int argc, char *argv[]) {
      * Register UserProgress as new qml Type.
      */
     qmlRegisterType<UserProgress>("typing.io.userprogress", 0, 1, "UserProgress");
+
+    /*!
+     * \brief qmlRegisterType<History>
+     * Register History as new qml Type.
+     */
+    qmlRegisterType<History>("typing.io.history", 0, 1, "History");
 
     /*!
      * \brief url
