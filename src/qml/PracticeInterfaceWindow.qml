@@ -11,6 +11,7 @@ import QtQuick 2.7
 import QtQuick.Window 2.7
 import QtQuick.Controls 2.5
 import typing.io 0.1
+import typing.io.userprogress 0.1
 
 Window {
     width: 800
@@ -22,15 +23,23 @@ Window {
     property Typing typing;
     property ResultsWindow resultsWindow;
     property bool isStarted: false
+    property UserProgress userProgress;
 
     Component.onCompleted: {
         typing.setTimeLabel(time);
     }
 
     function init() {
+        typingCode.clear();
+        typing.endTimer();
         time.text = "60";
+        typing.initGlobalVarOfUserProgress();
         langName.text = typing.getLnag();
         codeView.text = typing.getCodeText();
+        userProgress = typing.getUserProgress();
+        typing.updateUserProgress(typingCode.text);
+        codeView.select(userProgress.getStartIndexOfNextWord(),
+                        userProgress.getEndIndexOfNextWord());
         isStarted = false;
     }
 
@@ -40,8 +49,10 @@ Window {
     }
 
     function end() {
+        typing.calcUserSpeed();
         resultsWindow.init();
         resultsWindow.show();
+        typing.endTimer();
         hide();
     }
 
@@ -146,6 +157,7 @@ Window {
                 TextEdit {
                     id: typingCode
                     text: qsTr("")
+                    selectionColor: "#f44336"
                     anchors.rightMargin: 4
                     anchors.leftMargin: 4
                     anchors.bottomMargin: 4
@@ -154,9 +166,17 @@ Window {
                     horizontalAlignment: Text.AlignLeft
                     font.pixelSize: 20
 
+
                     onTextChanged: {
                         if(!isStarted) {
                             start();
+                        }
+                        typing.updateUserProgress(typingCode.text);
+                        if (userProgress.isEndTest()) {
+                            end();
+                        } else {
+                            codeView.select(userProgress.getStartIndexOfNextWord(),
+                                            userProgress.getEndIndexOfNextWord());
                         }
                     }
                 }

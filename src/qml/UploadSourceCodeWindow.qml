@@ -24,8 +24,7 @@ Window {
 
     function init() {
         languageComboBox.currentIndex = 0;
-        editor.text = "";
-        editor.focus = false;
+        editor.clear();
     }
 
     function exit() {
