@@ -68,7 +68,6 @@ void Typing::endTimer() {
 
 void Typing::freePtr() {
     delete m_timer;
-    delete m_timeLabel;
 }
 
 QObject *Typing::getUserProgress(QString typedText) {
