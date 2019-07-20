@@ -49,12 +49,14 @@ Window {
 
         // User history
         Rectangle {
+            id: rectangle
             height: 600
             width: 500
 
             ScrollView {
                 id: scrollView
                 height: 600
+                anchors.horizontalCenter: parent.horizontalCenter
                 clip: true
                 TextEdit {
                     id: history
