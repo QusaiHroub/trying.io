@@ -17,8 +17,8 @@ void UserProgress::setStartIndexOfNextWord(int startIndex) {
     m_startIndexOfNextWord = startIndex;
 }
 
-void UserProgress::setNextWordLength(int length) {
-    m_NextWordLength = length;
+void UserProgress::setEndIndexOfNextWord(int length) {
+    m_endIndexOfNextWord = length;
 }
 
 void UserProgress::setIsUserMadeMistake(bool isMadeMistake) {
@@ -33,8 +33,8 @@ int UserProgress::getStartIndexOfNextWord() {
     return m_startIndexOfNextWord;
 }
 
-int UserProgress::getNextWordLength() {
-    return m_NextWordLength;
+int UserProgress::getEndIndexOfNextWord() {
+    return m_endIndexOfNextWord;
 }
 
 bool UserProgress::isUserMadeMistake() {
@@ -43,4 +43,12 @@ bool UserProgress::isUserMadeMistake() {
 
 int UserProgress::getIndexOfFirstMistakeOfUser() {
     return m_indexOfFirstMistakeOfUser;
+}
+
+void UserProgress::setIsEndTest(bool endTest) {
+    m_endTest = endTest;
+}
+
+bool UserProgress::isEndTest() {
+    return m_endTest;
 }
