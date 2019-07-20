@@ -27,6 +27,12 @@ Window {
         Qt.quit();
     }
 
+    function loadHistory() {
+        historyWindow.init();
+        historyWindow.show()
+        hide();
+    }
+
     // Shortcut to call exit function.
     Shortcut {
         autoRepeat: false
@@ -88,6 +94,16 @@ Window {
             }
 
             Tbutton {
+                id: historyButton
+                height: 50
+                width: 230
+                buttonText: "History"
+                onClicked: {
+                    loadHistory();
+                }
+            }
+
+            Tbutton {
                 id: exitButton
                 height: 50
                 width: 230
@@ -123,6 +139,13 @@ Window {
         height: 480
         mainWindow: mainWindow
         typing: typing
+    }
+
+    HistoryWindow {
+        id: historyWindow
+        width: 800
+        height: 800
+        mainWindow: mainWindow
     }
 
     Typing {
