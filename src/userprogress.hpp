@@ -11,6 +11,8 @@
 #define USERPROGRESS_H
 
 #include <QObject>
+#include <QString>
+#include <QDateTime>
 
 class UserProgress : public QObject {
     Q_OBJECT
@@ -20,6 +22,7 @@ private:
     int m_indexOfFirstMistakeOfUser;
     bool m_userMadeMistake;
     bool m_endTest;
+    QString m_dateAndTime;
 
 public:
     explicit UserProgress(QObject *parent = nullptr);
@@ -37,6 +40,8 @@ public slots:
     bool isUserMadeMistake();
     int getIndexOfFirstMistakeOfUser();
     bool isEndTest();
+    QString getDateAndTime();
+    void initDateAndTime();
 };
 
 #endif // USERPROGRESS_H

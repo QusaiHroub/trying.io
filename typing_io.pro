@@ -13,11 +13,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        src/history.cpp \
         src/main.cpp \
         src/typing.cpp \
         src/userprogress.cpp
 
 HEADERS += \
+    src/history.hpp \
     src/typing.hpp \
     src/userprogress.hpp
 
