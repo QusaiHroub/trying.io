@@ -13,6 +13,7 @@
 #include <QQmlContext>
 
 #include "typing.hpp"
+#include "userprogress.hpp"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -31,17 +32,23 @@ int main(int argc, char *argv[]) {
      */
     QQmlApplicationEngine engine;
 
-    QCommandLineParser p;
-    p.addHelpOption();
-    p.addVersionOption();
-    p.setApplicationDescription("Typing.io");
-    p.process(app);
+    QCommandLineParser commandLineParser;
+    commandLineParser.addHelpOption();
+    commandLineParser.addVersionOption();
+    commandLineParser.setApplicationDescription("Typing.io");
+    commandLineParser.process(app);
 
     /*!
      * \brief qmlRegisterType<Typing>
      * Register Typing as new qml Type.
      */
     qmlRegisterType<Typing>("typing.io", 0, 1, "Typing");
+
+    /*!
+     * \brief qmlRegisterType<UserProgress>
+     * Register UserProgress as new qml Type.
+     */
+    qmlRegisterType<UserProgress>("typing.io.userprogress", 0, 1, "UserProgress");
 
     /*!
      * \brief url

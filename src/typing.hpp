@@ -1,3 +1,12 @@
+/* Typing.io
+*
+* This file is part of the Typing.io.
+*
+* Authors:
+* Qusai Hroub <qusaihroub.r@gmail.com>
+*
+*/
+
 #ifndef TYPING_HPP
 #define TYPING_HPP
 
@@ -6,6 +15,8 @@
 #include <QString>
 #include <QTimer>
 #include <QThread>
+
+#include "userprogress.hpp"
 
 class Typing: public QObject {
     Q_OBJECT
@@ -30,14 +41,7 @@ public slots:
     void setTimeLabel(QObject *timeLabel);
     void startTimer();
     void endTimer();
-    int getStartIndexOfNextWord(QString typedText);
-
-    // Calls after getStartIndexOfNextWord
-    int getNextWordLength();
-    bool isUserMadeMistake(QString typedText);
-
-    // Calls after isUserMadeMistake
-    int getIndexOfFirstMistakeOfUser();
+    QObject *getUserProgress(QString typedText);
 
     // To release memory.
     void freePtr();

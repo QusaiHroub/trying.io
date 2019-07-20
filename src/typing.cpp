@@ -1,3 +1,12 @@
+/* Typing.io
+*
+* This file is part of the Typing.io.
+*
+* Authors:
+* Qusai Hroub <qusaihroub.r@gmail.com>
+*
+*/
+
 #include "typing.hpp"
 
 Typing::Typing() {
@@ -57,23 +66,13 @@ void Typing::endTimer() {
     m_qThread.wait();
 }
 
-int Typing::getStartIndexOfNextWord(QString typedText) {
-    //TODO
-}
-
-int Typing::getNextWordLength() {
-    //TODO
-}
-
-bool Typing::isUserMadeMistake(QString typedText) {
-    //TODO
-}
-
-int Typing::getIndexOfFirstMistakeOfUser() {
-    //TODO
-}
-
 void Typing::freePtr() {
     delete m_timer;
     delete m_timeLabel;
+}
+
+QObject *Typing::getUserProgress(QString typedText) {
+    QObject *userProgress = new UserProgress();
+    //TODO
+    return userProgress;
 }
