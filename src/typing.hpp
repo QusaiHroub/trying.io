@@ -15,19 +15,31 @@
 #include <QString>
 #include <QTimer>
 #include <QThread>
+#include <QCharRef>
+#include <QChar>
 
 #include "userprogress.hpp"
 
 class Typing: public QObject {
     Q_OBJECT
 private:
+    const short WORD_LENGTH = 5;
+    const short TIMER_START_POINT = 120; // 120 equivalent to 60 second.
+    const short SIZE_OF_M_CHART_MISTAKE_COUNTER = 256;
+
     QString m_lang;
     QString m_codeText;
     QString m_result;
-    int m_triggerCount = 120; // 120 equals to 60 second.
+    int m_triggerCount = TIMER_START_POINT;
     QTimer *m_timer = new QTimer();
     QThread m_qThread;
     QObject *m_timeLabel;
+    int m_charMistakeCounter[256] = {};
+    int m_mistakeCounter = 0;
+    int m_userSpeed = 0;
+    int m_lengthOfTypedText = 0;
+    QObject *m_userProgress = new UserProgress();
+    UserProgress *m_userPro = (UserProgress *)m_userProgress; // I love old-style cast.
 
 public:
     Typing();
@@ -41,7 +53,11 @@ public slots:
     void setTimeLabel(QObject *timeLabel);
     void startTimer();
     void endTimer();
-    QObject *getUserProgress(QString typedText);
+    QObject *getUserProgress();
+    void updateUserProgress(QString typedText);
+    void calcUserSpeed();
+    void initGlobalVarOfUserProgress();
+
 
     // To release memory.
     void freePtr();
