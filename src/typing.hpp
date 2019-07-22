@@ -25,7 +25,7 @@ class Typing: public QObject {
 private:
     const short WORD_LENGTH = 5;
     const short TIMER_START_POINT = 120; // 120 equivalent to 60 second.
-    const short SIZE_OF_M_CHART_MISTAKE_COUNTER = 256;
+    const short SIZE_OF_M_CHAR_MISTAKE_COUNTER = 256;
 
     QString m_lang;
     QString m_codeText;
@@ -57,6 +57,7 @@ public slots:
     void updateUserProgress(QString typedText);
     void calcUserSpeed();
     void initGlobalVarOfUserProgress();
+    void determineNextWord(int index);
 
 
     // To release memory.
