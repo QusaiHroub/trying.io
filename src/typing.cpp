@@ -55,7 +55,7 @@ QString Typing::getResult() {
     if (m_mistakeCounter) {
         m_result += "List of Errors:\n\n";
         int numberOfProcessedMistakes = 0;
-        for (short i = 1; i < SIZE_OF_M_CHART_MISTAKE_COUNTER &&
+        for (short i = 1; i < SIZE_OF_M_CHAR_MISTAKE_COUNTER &&
              numberOfProcessedMistakes < m_mistakeCounter; i++) {
             if (m_charMistakeCounter[int(i)]) {
                 m_result += char(i);
@@ -94,14 +94,14 @@ void Typing::updateUserProgress(QString typedText) {
     m_userPro->setIsEndTest(false);
 
     int startPoint = m_lengthOfTypedText;
-    int endPonit = typedText.length();
+    int endPoint = typedText.length();
 
     #include <algorithm>
-    if (startPoint > endPonit) {
-        std::swap(startPoint, endPonit);
+    if (startPoint > endPoint) {
+        std::swap(startPoint, endPoint);
     }
 
-    for (int index = startPoint; index < endPonit; index++) {
+    for (int index = startPoint; index < endPoint; index++) {
         if (typedText[index] != m_codeText[index]) {
             if (!m_userPro->isUserMadeMistake()) {
                 m_userPro->setIsUserMadeMistake(true);
@@ -110,28 +110,7 @@ void Typing::updateUserProgress(QString typedText) {
                 m_charMistakeCounter[m_codeText[index].unicode()]++;
 
                 // To determine start and end of first word that the user has mistake on it.
-                if (m_codeText[index] == '\n' || m_codeText[index] == ' ') {
-                    m_userPro->setStartIndexOfNextWord(index);
-                    m_userPro->setEndIndexOfNextWord(index + 1);
-                } else {
-                    for (int i = index - 1; i >= 0; i--) {
-                        if (m_codeText[i] == '\n' || m_codeText[i] == ' ') {
-                            m_userPro->setStartIndexOfNextWord(i + 1);
-                            break;
-                        } else if (i == 0){
-                            m_userPro->setStartIndexOfNextWord(i);
-                        }
-                    }
-
-                    for (int i = index + 1; i < m_codeText.length(); i++) {
-                        if (m_codeText[i] == '\n' || m_codeText[i] == ' ') {
-                            m_userPro->setEndIndexOfNextWord(i);
-                            break;
-                        } else if (i == m_codeText.length() - 1) {
-                            m_userPro->setEndIndexOfNextWord(i + 1);
-                        }
-                    }
-                }
+                determineNextWord(index);
 
                 m_lengthOfTypedText = m_userPro->getIndexOfFirstMistakeOfUser();
             }
@@ -140,10 +119,10 @@ void Typing::updateUserProgress(QString typedText) {
         }
     }
 
-    m_lengthOfTypedText = endPonit;
+    m_lengthOfTypedText = endPoint;
     m_userPro->setIsUserMadeMistake(false);
 
-    // Determine if user would have finished the test or not.
+    // Determine if user finished the test or not.
     if (m_lengthOfTypedText == m_codeText.length()) {
         m_userPro->setIsEndTest(true);
         calcUserSpeed();
@@ -152,28 +131,8 @@ void Typing::updateUserProgress(QString typedText) {
     }
 
     // To determine start and end of next word.
-    if (m_codeText[endPonit] == ' ' || m_codeText[endPonit] == '\n') {
-        m_userPro->setEndIndexOfNextWord(endPonit + 1);
-        m_userPro->setStartIndexOfNextWord(endPonit);
+    determineNextWord(endPoint);
 
-        return;
-    }
-    for (int i = endPonit; i >= 0; i--) {
-        if (m_codeText[i] == '\n' || m_codeText[i] == ' ') {
-            m_userPro->setStartIndexOfNextWord(i + 1);
-            break;
-        } else if (i == 0){
-            m_userPro->setStartIndexOfNextWord(i);
-        }
-    }
-    for (int i = endPonit; i < m_codeText.length(); i++) {
-        if (m_codeText[i] == '\n' || m_codeText[i] == ' ') {
-            m_userPro->setEndIndexOfNextWord(i);
-            break;
-        } else if (i == m_codeText.length() - 1) {
-            m_userPro->setEndIndexOfNextWord(i + 1);
-        }
-    }
 }
 
 // Calculate user speed.
@@ -190,10 +149,36 @@ void Typing::calcUserSpeed() {
 }
 
 void Typing::initGlobalVarOfUserProgress() {
-    for (int i = 0; i < SIZE_OF_M_CHART_MISTAKE_COUNTER; i++) {
+    for (int i = 0; i < SIZE_OF_M_CHAR_MISTAKE_COUNTER; i++) {
         m_charMistakeCounter[i] = 0;
     }
     m_mistakeCounter = 0;
     m_userSpeed = 0;
     m_lengthOfTypedText = 0;
+}
+
+void Typing::determineNextWord(int index) {
+    if (m_codeText[index] == ' ' || m_codeText[index] == '\n') {
+        m_userPro->setEndIndexOfNextWord(index + 1);
+        m_userPro->setStartIndexOfNextWord(index);
+
+        return;
+    }
+
+    for (int i = index; i >= 0; i--) {
+        if (m_codeText[i] == '\n' || m_codeText[i] == ' ') {
+            m_userPro->setStartIndexOfNextWord(i + 1);
+            break;
+        } else if (i == 0){
+            m_userPro->setStartIndexOfNextWord(i);
+        }
+    }
+    for (int i = index; i < m_codeText.length(); i++) {
+        if (m_codeText[i] == '\n' || m_codeText[i] == ' ') {
+            m_userPro->setEndIndexOfNextWord(i);
+            break;
+        } else if (i == m_codeText.length() - 1) {
+            m_userPro->setEndIndexOfNextWord(i + 1);
+        }
+    }
 }
