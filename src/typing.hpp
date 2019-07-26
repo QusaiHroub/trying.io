@@ -24,15 +24,20 @@ class Typing: public QObject {
     Q_OBJECT
 private:
     const short WORD_LENGTH = 5;
-    const short TIMER_START_POINT = 120; // 120 equivalent to 60 second.
+    const short TIMER_END_POINT = 240; // 240 equivalent to 60 second.
     const short SIZE_OF_M_CHAR_MISTAKE_COUNTER = 256;
 
     QString m_lang;
     QString m_codeText;
     QString m_result;
-    int m_triggerCount = TIMER_START_POINT;
-    QTimer *m_timer = new QTimer();
-    QThread m_qThread;
+    int m_triggerCount = 0;
+    int m_timerEndPoint = TIMER_END_POINT;
+    QTimer *m_timer_0 = new QTimer();
+    QThread m_qThread_0;
+    QTimer *m_timer_1 = new QTimer();
+    QThread m_qThread_1;
+    QTimer *m_timer_2 = new QTimer();
+    QThread m_qThread_2;
     QObject *m_timeLabel;
     int m_charMistakeCounter[256] = {};
     int m_mistakeCounter = 0;
@@ -51,8 +56,8 @@ public slots:
     QString getCodeText();
     QString getResult();
     void setTimeLabel(QObject *timeLabel);
-    void startTimer();
-    void endTimer();
+    void startTimers();
+    void endTimers();
     QObject *getUserProgress();
     void updateUserProgress(QString typedText);
     void calcUserSpeed();
@@ -65,8 +70,14 @@ public slots:
 
 private slots:
 
-    // function that executes when the timer ticking
-    void timerSlot();
+    // function that executes when the timer 0 ticking
+    void timerSlot_0();
+
+    // function that executes when the timer 1 ticking
+    void timerSlot_1();
+
+    // function that executes when the timer 1 ticking
+    void timerSlot_2();
 };
 
 #endif // TYPING_HPP
