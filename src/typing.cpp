@@ -9,9 +9,6 @@
 
 #include "typing.hpp"
 
-#include <iostream>
-using namespace std;
-
 Typing::Typing() {
     connect(m_timer_0, SIGNAL(timeout()),
           this, SLOT(timerSlot_0()));
@@ -63,6 +60,10 @@ void Typing::timerSlot_2() {
     // Update Time Label wit remaining time.
     int remainingTime = m_timerEndPoint - m_triggerCount;
     m_timeLabel->setProperty("text", remainingTime / 4 + (remainingTime % 4 > 1));
+
+    // calculate user speed and update user speed label with his speed.
+    calcUserSpeed();
+    m_userSpeedLabel->setProperty("text", m_userSpeed);
 }
 
 bool Typing::save(QString lang, QString codeText) {
@@ -223,3 +224,8 @@ void Typing::determineNextWord(int index) {
         }
     }
 }
+
+void Typing::setUserSpeedLabel(QObject *userSpeedLabel) {
+    m_userSpeedLabel = userSpeedLabel;
+}
+
