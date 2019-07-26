@@ -45,6 +45,7 @@ private:
     int m_lengthOfTypedText = 0;
     QObject *m_userProgress = new UserProgress();
     UserProgress *m_userPro = (UserProgress *)m_userProgress; // I love old-style cast.
+    QObject *m_userSpeedLabel;
 
 public:
     Typing();
@@ -63,7 +64,7 @@ public slots:
     void calcUserSpeed();
     void initGlobalVarOfUserProgress();
     void determineNextWord(int index);
-
+    void setUserSpeedLabel(QObject *userSpeedLabel);
 
     // To release memory.
     void freePtr();

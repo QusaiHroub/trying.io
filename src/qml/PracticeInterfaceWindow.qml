@@ -27,6 +27,7 @@ Window {
 
     Component.onCompleted: {
         typing.setTimeLabel(time);
+        typing.setUserSpeedLabel(userSpeed)
     }
 
     function init() {
@@ -72,6 +73,7 @@ Window {
         }
 
         Rectangle {
+            id: rectangle
             width: parent.width
             height: 30
             color: "#00000000"
@@ -92,6 +94,22 @@ Window {
                 Text {
                     id: langName
                     text: qsTr("lang")
+                    font.pixelSize: 16
+                }
+            }
+
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 4
+
+                Text {
+                    text: qsTr("Your speed:")
+                    font.pixelSize: 16
+                }
+
+                Text {
+                    id: userSpeed
+                    text: qsTr("0")
                     font.pixelSize: 16
                 }
             }
