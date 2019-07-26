@@ -138,11 +138,6 @@ void Typing::updateUserProgress(QString typedText) {
     int startPoint = m_lengthOfTypedText;
     int endPoint = typedText.length();
 
-    #include <algorithm>
-    if (startPoint > endPoint) {
-        std::swap(startPoint, endPoint);
-    }
-
     for (int index = startPoint; index < endPoint; index++) {
         if (typedText[index] != m_codeText[index]) {
             if (!m_userPro->isUserMadeMistake()) {
@@ -150,9 +145,6 @@ void Typing::updateUserProgress(QString typedText) {
                 m_userPro->setIndexOfFirstMistakeOfUser(index);
                 m_mistakeCounter++;
                 m_charMistakeCounter[m_codeText[index].unicode()]++;
-
-                // To determine start and end of first word that the user has mistake on it.
-                determineNextWord(index);
 
                 m_lengthOfTypedText = m_userPro->getIndexOfFirstMistakeOfUser();
             }
