@@ -31,7 +31,7 @@ Window {
 
     function init() {
         typingCode.clear();
-        typing.endTimer();
+        typing.endTimers();
         time.text = "60";
         typing.initGlobalVarOfUserProgress();
         langName.text = typing.getLnag();
@@ -45,7 +45,7 @@ Window {
 
     function start() {
         isStarted = true;
-        typing.startTimer();
+        typing.startTimers();
         userProgress.initDateAndTime();
     }
 
@@ -53,7 +53,7 @@ Window {
         typing.calcUserSpeed();
         resultsWindow.init();
         resultsWindow.show();
-        typing.endTimer();
+        typing.endTimers();
         hide();
     }
 
@@ -166,7 +166,6 @@ Window {
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignLeft
                     font.pixelSize: 20
-
 
                     onTextChanged: {
                         if(!isStarted) {

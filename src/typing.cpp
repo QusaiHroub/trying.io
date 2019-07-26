@@ -9,28 +9,60 @@
 
 #include "typing.hpp"
 
+#include <iostream>
+using namespace std;
+
 Typing::Typing() {
-    connect(m_timer, SIGNAL(timeout()),
-          this, SLOT(timerSlot()));
-    m_timer->moveToThread(&m_qThread);
-    m_timer->connect(&m_qThread, SIGNAL(started()), SLOT(start()));
-    m_timer->connect(&m_qThread, SIGNAL(finished()), SLOT(stop()));
-    m_timer->setInterval(500);
-    m_timer->stop();
+    connect(m_timer_0, SIGNAL(timeout()),
+          this, SLOT(timerSlot_0()));
+    m_timer_0->moveToThread(&m_qThread_0);
+    m_timer_0->connect(&m_qThread_0, SIGNAL(started()), SLOT(start()));
+    m_timer_0->connect(&m_qThread_0, SIGNAL(finished()), SLOT(stop()));
+    m_timer_0->setInterval(250);
+    m_timer_0->stop();
+
+    connect(m_timer_1, SIGNAL(timeout()),
+          this, SLOT(timerSlot_1()));
+    m_timer_1->moveToThread(&m_qThread_1);
+    m_timer_1->connect(&m_qThread_1, SIGNAL(started()), SLOT(start()));
+    m_timer_1->connect(&m_qThread_1, SIGNAL(finished()), SLOT(stop()));
+    m_timer_1->setInterval(250);
+    m_timer_1->stop();
+
+    connect(m_timer_2, SIGNAL(timeout()),
+          this, SLOT(timerSlot_2()));
+    m_timer_2->moveToThread(&m_qThread_2);
+    m_timer_2->connect(&m_qThread_2, SIGNAL(started()), SLOT(start()));
+    m_timer_2->connect(&m_qThread_2, SIGNAL(finished()), SLOT(stop()));
+    m_timer_2->setInterval(250);
+    m_timer_2->stop();
 }
 
 Typing::~Typing() {
-    endTimer();
+    endTimers();
     freePtr();
 }
 
-void Typing::timerSlot() {
-    m_triggerCount--;
-    m_timeLabel->setProperty("text", m_triggerCount / 2 + (m_triggerCount & 1));
-    if (!m_triggerCount) {
-        m_qThread.quit();
-        m_qThread.wait();
+void Typing::timerSlot_0() {
+
+    // To count elapsed time.
+    m_triggerCount++;
+}
+
+void Typing::timerSlot_1() {
+
+    // To end timers when the elapsed time equal to the end time.
+    if (m_triggerCount >= m_timerEndPoint) {
+        m_userPro->setIsEndTest(true);
+        endTimers();
     }
+}
+
+void Typing::timerSlot_2() {
+
+    // Update Time Label wit remaining time.
+    int remainingTime = m_timerEndPoint - m_triggerCount;
+    m_timeLabel->setProperty("text", remainingTime / 4 + (remainingTime % 4 > 1));
 }
 
 bool Typing::save(QString lang, QString codeText) {
@@ -72,18 +104,27 @@ void Typing::setTimeLabel(QObject *timeLabel) {
     m_timeLabel = timeLabel;
 }
 
-void Typing::startTimer() {
-    m_triggerCount = TIMER_START_POINT;
-    m_qThread.start();
+void Typing::startTimers() {
+    m_triggerCount = 0;
+    m_timerEndPoint = TIMER_END_POINT;
+    m_qThread_0.start();
+    m_qThread_1.start();
+    m_qThread_2.start();
 }
 
-void Typing::endTimer() {
-    m_qThread.quit();
-    m_qThread.wait();
+void Typing::endTimers() {
+    m_qThread_0.quit();
+    m_qThread_0.wait();
+    m_qThread_1.quit();
+    m_qThread_1.wait();
+    m_qThread_2.quit();
+    m_qThread_2.wait();
 }
 
 void Typing::freePtr() {
-    delete m_timer;
+    delete m_timer_0;
+    delete m_timer_1;
+    delete m_timer_2;
 }
 
 QObject *Typing::getUserProgress() {
@@ -138,7 +179,7 @@ void Typing::updateUserProgress(QString typedText) {
 // Calculate user speed.
 void Typing::calcUserSpeed() {
     double speed = (double(m_lengthOfTypedText) / double(WORD_LENGTH))
-            / (TIMER_START_POINT - m_triggerCount) * 120;
+            / (double(m_triggerCount) / 240);
     m_userSpeed = int(speed);
     if (speed - m_userSpeed > 0.499) {
         m_userSpeed++;
