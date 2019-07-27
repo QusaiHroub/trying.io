@@ -10,6 +10,8 @@
 #ifndef USERPROGRESS_H
 #define USERPROGRESS_H
 
+// Qt includes
+
 #include <QObject>
 #include <QString>
 #include <QDateTime>
@@ -42,6 +44,7 @@ public slots:
     bool isEndTest();
     QString getDateAndTime();
     void initDateAndTime();
+    void init();
 };
 
 #endif // USERPROGRESS_H

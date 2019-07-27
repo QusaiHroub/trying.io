@@ -34,6 +34,7 @@ Window {
         typingCode.clear();
         typing.endTimers();
         time.text = "60";
+        userSpeed.text = "0";
         typing.initGlobalVarOfUserProgress();
         langName.text = typing.getLnag();
         codeView.text = typing.getCodeText();
@@ -46,8 +47,8 @@ Window {
 
     function start() {
         isStarted = true;
+        userProgress.init();
         typing.startTimers();
-        userProgress.initDateAndTime();
     }
 
     function end() {

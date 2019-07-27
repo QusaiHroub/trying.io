@@ -10,7 +10,7 @@
 #include "userprogress.hpp"
 
 UserProgress::UserProgress(QObject *parent) : QObject(parent) {
-
+    init();
 }
 
 void UserProgress::setStartIndexOfNextWord(int startIndex) {
@@ -60,4 +60,14 @@ void UserProgress::initDateAndTime() {
 
 QString UserProgress::getDateAndTime() {
     return m_dateAndTime;
+}
+
+void UserProgress::init() {
+    m_startIndexOfNextWord = -1;
+    m_endIndexOfNextWord = -1;
+    m_indexOfFirstMistakeOfUser = -1;
+    m_userMadeMistake = false;
+    m_endTest = false;
+
+    initDateAndTime();
 }

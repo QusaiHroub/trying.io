@@ -10,6 +10,8 @@
 #ifndef TYPING_HPP
 #define TYPING_HPP
 
+// Qt includes
+
 #include <QObject>
 #include <QDebug>
 #include <QString>
@@ -17,6 +19,8 @@
 #include <QThread>
 #include <QCharRef>
 #include <QChar>
+
+// Local includes
 
 #include "userprogress.hpp"
 
@@ -44,7 +48,7 @@ private:
     int m_userSpeed = 0;
     int m_lengthOfTypedText = 0;
     QObject *m_userProgress = new UserProgress();
-    UserProgress *m_userPro = (UserProgress *)m_userProgress; // I love old-style cast.
+    UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
     QObject *m_userSpeedLabel;
 
 public:
@@ -77,7 +81,7 @@ private slots:
     // function that executes when the timer 1 ticking
     void timerSlot_1();
 
-    // function that executes when the timer 1 ticking
+    // function that executes when the timer 2 ticking
     void timerSlot_2();
 };
 

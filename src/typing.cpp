@@ -12,10 +12,10 @@
 Typing::Typing() {
     connect(m_timer_0, SIGNAL(timeout()),
           this, SLOT(timerSlot_0()));
-    m_timer_0->moveToThread(&m_qThread_0);
+    m_timer_0->moveToThread(&m_qThread_0); // Changes the thread affinity for timer (m_timer_0) and its children
     m_timer_0->connect(&m_qThread_0, SIGNAL(started()), SLOT(start()));
     m_timer_0->connect(&m_qThread_0, SIGNAL(finished()), SLOT(stop()));
-    m_timer_0->setInterval(250);
+    m_timer_0->setInterval(250); // 250 ms equivalent to 0.25 second.
     m_timer_0->stop();
 
     connect(m_timer_1, SIGNAL(timeout()),
@@ -57,7 +57,7 @@ void Typing::timerSlot_1() {
 
 void Typing::timerSlot_2() {
 
-    // Update Time Label wit remaining time.
+    // Update Time Label with remaining time.
     int remainingTime = m_timerEndPoint - m_triggerCount;
     m_timeLabel->setProperty("text", remainingTime / 4 + (remainingTime % 4 > 1));
 
@@ -133,8 +133,6 @@ QObject *Typing::getUserProgress() {
 }
 
 void Typing::updateUserProgress(QString typedText) {
-    m_userPro->setIsEndTest(false);
-
     int startPoint = m_lengthOfTypedText;
     int endPoint = typedText.length();
 

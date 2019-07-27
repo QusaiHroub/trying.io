@@ -7,10 +7,14 @@
 *
 */
 
+// Qt includes
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QCommandLineParser>
 #include <QQmlContext>
+
+// Local includes
 
 #include "typing.hpp"
 #include "userprogress.hpp"
