@@ -1,4 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>qml/mainWindow.qml</file>
+	<file>image/background.png</file>
     </qresource>
 </RCC>
