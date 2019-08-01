@@ -138,6 +138,10 @@ Window {
             interactive: false
             currentIndex: 0
             clip: true
+
+            WelcomePage {
+                id: welcomePage
+            }
         }
     }
 }
