@@ -16,12 +16,14 @@ SOURCES += \
         src/history.cpp \
         src/main.cpp \
         src/typing.cpp \
-        src/userprogress.cpp
+        src/userprogress.cpp \
+        src/file.cpp
 
 HEADERS += \
     src/history.hpp \
     src/typing.hpp \
-    src/userprogress.hpp
+    src/userprogress.hpp \
+    src/file.hpp
 
 RESOURCES += src/qml.qrc
 
