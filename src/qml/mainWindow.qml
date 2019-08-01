@@ -147,6 +147,12 @@ Window {
                 mainWindow: mainWindow
                 typing: typing
             }
+
+            PracticeAndResultPage {
+                id: practiceAndResultPage
+                mainWindow: mainWindow
+                typing: typing
+            }
         }
     }
 }
