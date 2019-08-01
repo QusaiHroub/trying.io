@@ -67,7 +67,7 @@ void Typing::timerSlot_2() {
 
     // Update Time Label with remaining time.
     int remainingTime = m_timerEndPoint - m_triggerCount;
-    m_timeLabel->setProperty("text", remainingTime / 4 + (remainingTime % 4 > 1));
+    m_timeLabel->setProperty("text", remainingTime);
 
     // calculate user speed and update user speed label with his speed.
     calcUserSpeed();
