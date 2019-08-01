@@ -19,6 +19,7 @@
 #include <QThread>
 #include <QCharRef>
 #include <QChar>
+#include <QDir>
 
 // Local includes
 
@@ -35,6 +36,7 @@ private:
     QString m_lang;
     QString m_codeText;
     QString m_result;
+    QString m_savePath;
     QTimer *m_timer_0 = new QTimer();
     QThread m_qThread_0;
     QTimer *m_timer_1 = new QTimer();

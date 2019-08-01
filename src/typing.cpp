@@ -33,6 +33,14 @@ Typing::Typing() {
     m_timer_2->connect(&m_qThread_2, SIGNAL(finished()), SLOT(stop()));
     m_timer_2->setInterval(250);
     m_timer_2->stop();
+
+    m_savePath = QDir::currentPath() + "\\save\\";
+    QDir dir(m_savePath);
+
+    // Create save file if not exists.
+    if (!dir.exists()) {
+        dir.mkdir(m_savePath);
+    }
 }
 
 Typing::~Typing() {
@@ -67,9 +75,9 @@ void Typing::timerSlot_2() {
 }
 
 bool Typing::saveFile(QString name, QString lang, QString codeText) {
-
-    //TODO.
-
+    File newFile(name, lang, m_savePath);
+    newFile.setContent(codeText);
+    newFile.saveFile();
     return true;
 }
 
