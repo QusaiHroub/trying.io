@@ -29,10 +29,6 @@ Window {
         Qt.quit();
     }
 
-    function loadHistory() {
-        historyPage.init();
-    }
-
     // Shortcut to call exit function.
     Shortcut {
         autoRepeat: false
@@ -75,10 +71,61 @@ Window {
                 anchors.fill: parent
                 clip: true
 
-                Column {
-                    spacing: 8
-                    anchors.fill: parent
+                Item {
+                    Column {
+                        spacing: 8
+                        anchors.fill: parent
 
+                        TButton {
+                            id: welcomePageButton
+                            height: 50
+                            width: 230
+                            text: "Welcome"
+                            onClicked: {
+                                swipeView1.setCurrentIndex(0);
+                            }
+                        }
+
+                        TButton {
+                            id: uploadSourceCodeButton
+                            height: 50
+                            width: 230
+                            text: "Upload Source Code"
+                            onClicked: {
+                                swipeView1.setCurrentIndex(1);
+                            }
+                        }
+
+                        TButton {
+                            id: practiceButton
+                            height: 50
+                            width: 230
+                            text: "Practice!"
+                            onClicked: {
+                                swipeView1.setCurrentIndex(2);
+                            }
+                        }
+
+                        TButton {
+                            id: historyButton
+                            height: 50
+                            width: 230
+                            text: "History"
+                            onClicked: {
+                                swipeView1.setCurrentIndex(3);
+                            }
+                        }
+
+                        TButton {
+                            id: exiTButton
+                            height: 50
+                            width: 230
+                            text: "Exit"
+                            onClicked: {
+                                exit();
+                            }
+                        }
+                    }
                 }
             }
         }

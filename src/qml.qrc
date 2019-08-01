@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/mainWindow.qml</file>
-	<file>image/background.png</file>
+        <file>image/background.png</file>
+        <file>qml/TButton.qml</file>
     </qresource>
 </RCC>
