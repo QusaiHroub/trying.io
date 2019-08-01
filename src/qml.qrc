@@ -3,5 +3,6 @@
         <file>qml/mainWindow.qml</file>
         <file>image/background.png</file>
         <file>qml/TButton.qml</file>
+        <file>qml/T2Button.qml</file>
     </qresource>
 </RCC>
