@@ -64,6 +64,7 @@ public slots:
     QString getLnag();
     QString getCodeText();
     QString getResult();
+    QString getSavePath();
     QObject *getUserProgress();
     bool isTested();
 
