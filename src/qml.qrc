@@ -7,5 +7,6 @@
         <file>qml/WelcomePage.qml</file>
         <file>qml/UploadSourceCodePage.qml</file>
         <file>qml/PracticeAndResultPage.qml</file>
+        <file>qml/HistoryPage.qml</file>
     </qresource>
 </RCC>

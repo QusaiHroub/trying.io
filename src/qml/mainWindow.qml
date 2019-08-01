@@ -91,6 +91,7 @@ Window {
                             width: 230
                             text: "Upload Source Code"
                             onClicked: {
+                                uploadSourceCodePage.init();
                                 swipeView1.setCurrentIndex(1);
                             }
                         }
@@ -101,6 +102,7 @@ Window {
                             width: 230
                             text: "Practice!"
                             onClicked: {
+                                practiceAndResultPage.init();
                                 swipeView1.setCurrentIndex(2);
                             }
                         }
@@ -111,6 +113,7 @@ Window {
                             width: 230
                             text: "History"
                             onClicked: {
+                                historyPage.init();
                                 swipeView1.setCurrentIndex(3);
                             }
                         }
@@ -152,6 +155,11 @@ Window {
                 id: practiceAndResultPage
                 mainWindow: mainWindow
                 typing: typing
+            }
+
+            HistoryPage {
+                id: historyPage
+                mainWindow: mainWindow
             }
         }
     }
