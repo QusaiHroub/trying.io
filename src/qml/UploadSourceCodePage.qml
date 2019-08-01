@@ -149,20 +149,16 @@ Item {
                     anchors.fill: parent
                     clip: true
 
-                    Item {
+                    TextEdit {
+                        id: editor
+                        text: qsTr("")
+                        horizontalAlignment: Text.AlignLeft
+                        font.pixelSize: 20
                         anchors.rightMargin: 4
                         anchors.leftMargin: 4
                         anchors.bottomMargin: 4
                         anchors.topMargin: 4
                         anchors.fill: parent
-
-                        TextEdit {
-                            id: editor
-                            text: qsTr("")
-                            anchors.fill: parent
-                            horizontalAlignment: Text.AlignLeft
-                            font.pixelSize: 20
-                        }
                     }
                 }
             }
