@@ -4,5 +4,6 @@
         <file>image/background.png</file>
         <file>qml/TButton.qml</file>
         <file>qml/T2Button.qml</file>
+        <file>qml/WelcomePage.qml</file>
     </qresource>
 </RCC>
