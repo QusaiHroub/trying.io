@@ -6,5 +6,6 @@
         <file>qml/T2Button.qml</file>
         <file>qml/WelcomePage.qml</file>
         <file>qml/UploadSourceCodePage.qml</file>
+        <file>qml/PracticeAndResultPage.qml</file>
     </qresource>
 </RCC>
