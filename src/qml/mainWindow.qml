@@ -8,9 +8,10 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Window 2.7
+import QtQuick.Window 2.12
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 2.12
+
 import typing.io 0.2
 
 Window {
@@ -21,8 +22,6 @@ Window {
     width: 1150
     height: 700
     title: qsTr("Typing.io")
-
-    property bool isSave: false;
 
     // To close the Application.
     function exit () {
@@ -141,6 +140,12 @@ Window {
 
             WelcomePage {
                 id: welcomePage
+            }
+
+            UploadSourceCodePage {
+                id: uploadSourceCodePage
+                mainWindow: mainWindow
+                typing: typing
             }
         }
     }

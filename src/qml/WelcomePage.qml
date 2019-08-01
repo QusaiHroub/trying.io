@@ -8,7 +8,6 @@
 */
 
 import QtQuick 2.0
-import QtQuick.Window 2.7
 
 Item {
     width: 1690
@@ -73,7 +72,6 @@ Item {
                         text: "Go To\nPractice!"
                         onClicked: {
                             practiceAndResultPage.init();
-                            practiceAndResultPage.isSave = isSave;
                             swipeView1.setCurrentIndex(2);
                         }
                     }
