@@ -119,6 +119,10 @@ QObject *Typing::getUserProgress() {
     return m_userProgress;
 }
 
+QString Typing::getSavePath() {
+    return m_savePath;
+}
+
 bool Typing::isTested() {
     return m_selectedFile != nullptr;
 }
