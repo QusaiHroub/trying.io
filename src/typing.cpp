@@ -15,7 +15,7 @@ Typing::Typing() {
     m_timer_0->moveToThread(&m_qThread_0); // Changes the thread affinity for timer (m_timer_0) and its children
     m_timer_0->connect(&m_qThread_0, SIGNAL(started()), SLOT(start()));
     m_timer_0->connect(&m_qThread_0, SIGNAL(finished()), SLOT(stop()));
-    m_timer_0->setInterval(250); // 250 ms equivalent to 0.25 second.
+    m_timer_0->setInterval(1000); // 1000 ms equivalent to 1 second.
     m_timer_0->stop();
 
     connect(m_timer_1, SIGNAL(timeout()),
@@ -66,10 +66,16 @@ void Typing::timerSlot_2() {
     m_userSpeedLabel->setProperty("text", m_userSpeed);
 }
 
-bool Typing::save(QString lang, QString codeText) {
-    m_lang = lang;
-    m_codeText = codeText;
+bool Typing::saveFile(QString name, QString lang, QString codeText) {
+
+    //TODO.
+
     return true;
+}
+
+void Typing::loadFile() {
+    m_selectedFile->loadAll();
+    m_codeText = m_selectedFile->getContent();
 }
 
 QString Typing::getLnag() {
@@ -101,8 +107,24 @@ QString Typing::getResult() {
     return m_result;
 }
 
+QObject *Typing::getUserProgress() {
+    return m_userProgress;
+}
+
+bool Typing::isTested() {
+    return m_selectedFile != nullptr;
+}
+
 void Typing::setTimeLabel(QObject *timeLabel) {
     m_timeLabel = timeLabel;
+}
+
+void Typing::setUserSpeedLabel(QObject *userSpeedLabel) {
+    m_userSpeedLabel = userSpeedLabel;
+}
+
+void Typing::setSelectedFile(File *selectedFile) {
+    m_selectedFile = selectedFile;
 }
 
 void Typing::startTimers() {
@@ -126,10 +148,6 @@ void Typing::freePtr() {
     delete m_timer_0;
     delete m_timer_1;
     delete m_timer_2;
-}
-
-QObject *Typing::getUserProgress() {
-    return m_userProgress;
 }
 
 void Typing::updateUserProgress(QString typedText) {
@@ -170,7 +188,7 @@ void Typing::updateUserProgress(QString typedText) {
 // Calculate user speed.
 void Typing::calcUserSpeed() {
     double speed = (double(m_lengthOfTypedText) / double(WORD_LENGTH))
-            / (double(m_triggerCount) / 240);
+            / (double(m_triggerCount) / MINUTE);
     m_userSpeed = int(speed);
     if (speed - m_userSpeed > 0.499) {
         m_userSpeed++;
@@ -213,9 +231,5 @@ void Typing::determineNextWord(int index) {
             m_userPro->setEndIndexOfNextWord(i + 1);
         }
     }
-}
-
-void Typing::setUserSpeedLabel(QObject *userSpeedLabel) {
-    m_userSpeedLabel = userSpeedLabel;
 }
 

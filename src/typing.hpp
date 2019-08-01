@@ -23,19 +23,18 @@
 // Local includes
 
 #include "userprogress.hpp"
+#include "file.hpp"
 
 class Typing: public QObject {
     Q_OBJECT
 private:
     const short WORD_LENGTH = 5;
-    const short TIMER_END_POINT = 240; // 240 equivalent to 60 second.
+    const short MINUTE = 60;
     const short SIZE_OF_M_CHAR_MISTAKE_COUNTER = 256;
 
     QString m_lang;
     QString m_codeText;
     QString m_result;
-    int m_triggerCount = 0;
-    int m_timerEndPoint = TIMER_END_POINT;
     QTimer *m_timer_0 = new QTimer();
     QThread m_qThread_0;
     QTimer *m_timer_1 = new QTimer();
@@ -43,32 +42,43 @@ private:
     QTimer *m_timer_2 = new QTimer();
     QThread m_qThread_2;
     QObject *m_timeLabel;
+    QObject *m_userProgress = new UserProgress();
+    UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
+    QObject *m_userSpeedLabel;
+    File *m_selectedFile = nullptr;
+    int m_triggerCount = 0;
+    int TIMER_END_POINT = MINUTE;
+    int m_timerEndPoint = TIMER_END_POINT;
     int m_charMistakeCounter[256] = {};
     int m_mistakeCounter = 0;
     int m_userSpeed = 0;
     int m_lengthOfTypedText = 0;
-    QObject *m_userProgress = new UserProgress();
-    UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
-    QObject *m_userSpeedLabel;
 
 public:
     Typing();
     ~Typing();
 
 public slots:
-    bool save(QString lang, QString codeText);
     QString getLnag();
     QString getCodeText();
     QString getResult();
+    QObject *getUserProgress();
+    bool isTested();
+
     void setTimeLabel(QObject *timeLabel);
+    void setUserSpeedLabel(QObject *userSpeedLabel);
+    void setSelectedFile(File *selectedFile);
+
+    bool saveFile(QString name, QString lang, QString codeText);
+    void loadFile();
+
     void startTimers();
     void endTimers();
-    QObject *getUserProgress();
+
     void updateUserProgress(QString typedText);
     void calcUserSpeed();
     void initGlobalVarOfUserProgress();
-    void determineNextWord(int index);
-    void setUserSpeedLabel(QObject *userSpeedLabel);
+    void determineNextWord(int index); 
 
     // To release memory.
     void freePtr();
