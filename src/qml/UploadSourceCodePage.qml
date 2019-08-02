@@ -152,22 +152,20 @@ Item {
                 border.color: "#3f51b5"
                 border.width: 2
                 width: parent.width - parent.width * 0.16
-                ScrollView {
-                    id: editorScrollView
+                Flickable {
+                    id: flickable
                     anchors.fill: parent
                     clip: true
 
-                    TextEdit {
+                    TextArea.flickable: TextArea {
                         id: editor
                         text: qsTr("")
                         horizontalAlignment: Text.AlignLeft
                         font.pixelSize: 20
-                        anchors.rightMargin: 4
-                        anchors.leftMargin: 4
-                        anchors.bottomMargin: 4
-                        anchors.topMargin: 4
-                        anchors.fill: parent
                     }
+
+                    ScrollBar.vertical: ScrollBar { }
+                    ScrollBar.horizontal: ScrollBar { }
                 }
             }
 
