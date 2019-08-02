@@ -1,12 +1,11 @@
-/* Typing.io
+/* Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
 *
 */
-
 
 #ifndef HISTORY_HPP
 #define HISTORY_HPP

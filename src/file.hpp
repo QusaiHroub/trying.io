@@ -1,6 +1,6 @@
-/* Typing.io
+/* Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>

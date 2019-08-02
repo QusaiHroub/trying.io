@@ -1,6 +1,6 @@
-/* Typing.io
+/* Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
      * \brief QCoreApplication::setApplicationName
      * This property holds the name of this application.
      */
-    QCoreApplication::setApplicationName("Typing.io");
+    QCoreApplication::setApplicationName("Trying.io");
 
     /*!
      * \brief engine
@@ -41,32 +41,32 @@ int main(int argc, char *argv[]) {
     QCommandLineParser commandLineParser;
     commandLineParser.addHelpOption();
     commandLineParser.addVersionOption();
-    commandLineParser.setApplicationDescription("Typing.io");
+    commandLineParser.setApplicationDescription("Trying.io");
     commandLineParser.process(app);
 
     /*!
      * \brief qmlRegisterType<Typing>
      * Register Typing as new qml Type.
      */
-    qmlRegisterType<Typing>("typing.io", 0, 2, "Typing");
+    qmlRegisterType<Typing>("trying.io.typing", 0, 2, "Typing");
 
     /*!
      * \brief qmlRegisterType<UserProgress>
      * Register UserProgress as new qml Type.
      */
-    qmlRegisterType<UserProgress>("typing.io.userprogress", 0, 2, "UserProgress");
+    qmlRegisterType<UserProgress>("trying.io.userprogress", 0, 2, "UserProgress");
 
     /*!
      * \brief qmlRegisterType<History>
      * Register History as new qml Type.
      */
-    qmlRegisterType<History>("typing.io.history", 0, 2, "History");
+    qmlRegisterType<History>("trying.io.history", 0, 2, "History");
 
     /*!
      * \brief qmlRegisterType<File>
      * Register File as new qml Type.
      */
-    qmlRegisterType<File>("typing.io.file", 0, 2, "File");
+    qmlRegisterType<File>("trying.io.file", 0, 2, "File");
 
     /*!
      * \brief url
