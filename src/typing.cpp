@@ -35,12 +35,7 @@ Typing::Typing() {
     m_timer_2->stop();
 
     m_savePath = QDir::currentPath() + "\\save\\";
-    QDir dir(m_savePath);
-
-    // Create save file if not exists.
-    if (!dir.exists()) {
-        dir.mkdir(m_savePath);
-    }
+    File::createFolder(m_savePath);
 }
 
 Typing::~Typing() {
