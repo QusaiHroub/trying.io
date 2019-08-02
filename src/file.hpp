@@ -41,6 +41,9 @@ public slots:
     void saveFile();
     QVariantList scanDir();
 
+    static void CreateFolder(QString path);
+    static void removeFolder(QString path);
+
     QString getContent();
     QString getName();
     QString getPath();

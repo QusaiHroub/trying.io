@@ -87,6 +87,24 @@ QVariantList File::scanDir() {
     return list;
 }
 
+void File::CreateFolder(QString path) {
+    QDir dir(path);
+
+    // Create folder if it not exists.
+    if (!dir.exists()) {
+        dir.mkdir(path);
+    }
+}
+
+void File::removeFolder(QString path) {
+    QDir dir(path);
+
+    // Remove folder if it exists.
+    if (dir.exists()) {
+        dir.mkdir(path);
+    }
+}
+
 void File::initFile(QString name, QString extension, QString path, bool isFile) {
     m_nameOfFile = name;
     m_extensionOfFile = extension;
