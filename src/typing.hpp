@@ -73,7 +73,7 @@ public slots:
     void setTimeLabel(QObject *timeLabel);
     void setUserSpeedLabel(QObject *userSpeedLabel);
     void setSelectedFile(File *selectedFile);
-    void setTimeDuration(int timeDuration);
+    void setTimeDuration(int timeDurationInMinutes);
 
     bool saveFile(QString name, QString lang, QString codeText);
     void loadFile();
