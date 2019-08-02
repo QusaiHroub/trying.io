@@ -56,6 +56,8 @@ private:
     int m_userSpeed = 0;
     int m_lengthOfTypedText = 0;
 
+    void determineNextWord(int index);
+
 public:
     Typing();
     ~Typing();
@@ -81,7 +83,6 @@ public slots:
     void updateUserProgress(QString typedText);
     void calcUserSpeed();
     void initGlobalVarOfUserProgress();
-    void determineNextWord(int index); 
 
     // To release memory.
     void freePtr();
