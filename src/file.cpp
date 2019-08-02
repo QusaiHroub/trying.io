@@ -162,6 +162,10 @@ QString File::getExtension() {
     return m_extensionOfFile;
 }
 
+bool File::isFile() {
+    return m_type && !m_extensionOfFile.isEmpty();
+}
+
 void File::clear() {
     m_contentOfFile.clear();
     saveFile();

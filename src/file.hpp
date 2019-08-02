@@ -51,6 +51,7 @@ public slots:
     QString getPath();
     QString getFullPath();
     QString getExtension();
+    bool isFile();
 
     void setContent(QString content);
     void append(QString content);
