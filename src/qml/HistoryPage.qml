@@ -1,6 +1,6 @@
-/* UI Typing.io
+/* UI Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
@@ -11,8 +11,8 @@ import QtQuick 2.7
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.5
 
-import typing.io 0.2
-import typing.io.history 0.2
+import trying.io.typing 0.2
+import trying.io.history 0.2
 
 Item {
     width: 1690
