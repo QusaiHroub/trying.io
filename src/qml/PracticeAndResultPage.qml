@@ -24,11 +24,19 @@ Item {
     property Window mainWindow;
     property Typing typing;
     property UserProgress userProgress;
-    property bool isStarted: false;
-    property bool isLoaded: false;
-    property var files;
-    property var filesList: [];
-    property var language : ["c", "cpp", "java"];
+
+    QtObject {
+        id: internal
+
+        readonly property int baseWidth: 1690
+        readonly property int baseHeight: 1051
+
+        property bool isStarted: false;
+        property bool isLoaded: false;
+        property var files;
+        property var filesList: [];
+        property var language : ["c", "cpp", "java"];
+    }
 
     Component.onCompleted: {
         typing.setTimeLabel(time);
@@ -40,7 +48,7 @@ Item {
     function initComponets() {
         typingCode.clear();
         typing.endTimers();
-        isLoaded = false;
+        internal.isLoaded = false;
         time.text = "60";
         userSpeed.text = "0";
         swipeView.setCurrentIndex(0);
@@ -60,7 +68,7 @@ Item {
         typing.updateUserProgress(typingCode.text);
         codeView.select(userProgress.getStartIndexOfNextWord(),
                         userProgress.getEndIndexOfNextWord());
-        isStarted = false;
+        internal.isStarted = false;
     }
 
     function repractice() {
@@ -77,13 +85,13 @@ Item {
             return;
         }
 
-        typing.setSelectedFile(filesList[listView.currentIndex]);
+        typing.setSelectedFile(internal.filesList[listView.currentIndex]);
         typing.loadFile();
-        isLoaded = true;
+        internal.isLoaded = true;
     }
 
     function start() {
-        isStarted = true;
+        internal.isStarted = true;
         userProgress.init();
         typing.startTimers();
     }
@@ -105,16 +113,16 @@ Item {
     function filter() {
         listView.currentIndex = -1;
         listView.model = 0;
-        files = file.scanDir();
-        filesList = [];
+        internal.files = file.scanDir();
+        internal.filesList = [];
 
-        for (var i in files) {
-            if (files[i].getExtension() === language[languageComboBox.currentIndex]) {
-                filesList.push(files[i]);
+        for (var i in internal.files) {
+            if (internal.files[i].getExtension() === internal.language[languageComboBox.currentIndex]) {
+                internal.filesList.push(internal.files[i]);
             }
         }
 
-        listView.model = filesList.length;
+        listView.model = internal.filesList.length;
     }
 
     File {
@@ -130,13 +138,13 @@ Item {
         border.color: "#3f51b5"
         border.width: 2
         anchors.top: parent.top
-        anchors.topMargin: 100
+        anchors.topMargin: parent.height * 100 / internal.baseHeight
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 100
+        anchors.bottomMargin: parent.height * 100 / internal.baseHeight
         anchors.left: parent.left
-        anchors.leftMargin: 200
+        anchors.leftMargin: parent.width * 200 / internal.baseWidth
         anchors.right: parent.right
-        anchors.rightMargin: 200
+        anchors.rightMargin: parent.width * 200 / internal.baseWidth
 
         SwipeView {
             id: swipeView
@@ -220,7 +228,7 @@ Item {
                             delegate: T2Button {
                                 width: 133
                                 height: 133
-                                text: filesList !== undefined ? filesList[index].getName() : "";
+                                text: internal.filesList !== undefined ? internal.filesList[index].getName() : "";
                                 onClicked: {
                                     listView.currentIndex = index
                                 }
@@ -272,7 +280,7 @@ Item {
                             text: "load file then practice"
                             onClicked: {
                                 load();
-                                if (isLoaded) {
+                                if (internal.isLoaded) {
                                     practice();
                                 } else {
                                     selectFileDialog.open();
@@ -442,7 +450,7 @@ Item {
                                 onCursorRectangleChanged: typingCodeFlick.ensureVisible(cursorRectangle)
 
                                 onTextChanged: {
-                                    if(!isStarted) {
+                                    if(!internal.isStarted) {
                                         start();
                                     }
                                     typing.updateUserProgress(typingCode.text);

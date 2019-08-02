@@ -13,6 +13,13 @@ Item {
     width: 1690
     height: 1051
 
+    QtObject {
+        id: internal
+
+        readonly property int baseWidth: 1690
+        readonly property int baseHeight: 1051
+    }
+
     function exit () {
         Qt.quit();
     }
@@ -22,13 +29,13 @@ Item {
         border.color: "#3f51b5"
         border.width: 2
         anchors.top: parent.top
-        anchors.topMargin: 100
+        anchors.topMargin: parent.height * 100 / internal.baseHeight
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 100
+        anchors.bottomMargin: parent.height * 100 / internal.baseHeight
         anchors.left: parent.left
-        anchors.leftMargin: 200
+        anchors.leftMargin: parent.width * 200 / internal.baseWidth
         anchors.right: parent.right
-        anchors.rightMargin: 200
+        anchors.rightMargin: parent.width * 200 / internal.baseWidth
 
         Item {
             id: element
