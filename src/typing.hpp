@@ -49,8 +49,7 @@ private:
     QObject *m_userSpeedLabel;
     File *m_selectedFile = nullptr;
     int m_triggerCount = 0;
-    int TIMER_END_POINT = MINUTE;
-    int m_timerEndPoint = TIMER_END_POINT;
+    int m_timeDuration = MINUTE;
     int m_charMistakeCounter[256] = {};
     int m_mistakeCounter = 0;
     int m_userSpeed = 0;
@@ -68,11 +67,13 @@ public slots:
     QString getResult();
     QString getSavePath();
     QObject *getUserProgress();
+    int getTimeDuration();
     bool isTested();
 
     void setTimeLabel(QObject *timeLabel);
     void setUserSpeedLabel(QObject *userSpeedLabel);
     void setSelectedFile(File *selectedFile);
+    void setTimeDuration(int timeDuration);
 
     bool saveFile(QString name, QString lang, QString codeText);
     void loadFile();

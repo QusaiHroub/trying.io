@@ -52,7 +52,7 @@ void Typing::timerSlot_0() {
 void Typing::timerSlot_1() {
 
     // To end timers when the elapsed time equal to the end time.
-    if (m_triggerCount >= m_timerEndPoint) {
+    if (m_triggerCount >= m_timeDuration) {
         m_userPro->setIsEndTest(true);
         endTimers();
     }
@@ -61,7 +61,7 @@ void Typing::timerSlot_1() {
 void Typing::timerSlot_2() {
 
     // Update Time Label with remaining time.
-    int remainingTime = m_timerEndPoint - m_triggerCount;
+    int remainingTime = m_timeDuration - m_triggerCount;
     m_timeLabel->setProperty("text", remainingTime);
 
     // calculate user speed and update user speed label with his speed.
@@ -118,6 +118,10 @@ QString Typing::getSavePath() {
     return m_savePath;
 }
 
+int Typing::getTimeDuration() {
+    return m_timeDuration;
+}
+
 bool Typing::isTested() {
     return m_selectedFile != nullptr;
 }
@@ -134,9 +138,12 @@ void Typing::setSelectedFile(File *selectedFile) {
     m_selectedFile = selectedFile;
 }
 
+void Typing::setTimeDuration(int timeDurationInMinutes) {
+    m_timeDuration = timeDurationInMinutes * MINUTE;
+}
+
 void Typing::startTimers() {
     m_triggerCount = 0;
-    m_timerEndPoint = TIMER_END_POINT;
     m_qThread_0.start();
     m_qThread_1.start();
     m_qThread_2.start();
