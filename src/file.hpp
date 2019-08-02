@@ -47,6 +47,7 @@ public slots:
     QString getContent();
     QString getName();
     QString getPath();
+    QString getFullPath();
     QString getExtension();
 
     void setContent(QString content);

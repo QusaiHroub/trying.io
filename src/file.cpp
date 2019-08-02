@@ -141,6 +141,15 @@ QString File::getPath() {
     return m_pathOfFile;
 }
 
+QString File::getFullPath() {
+    QString path = m_pathOfFile;
+    if (*(path.end() - 1) != '\\' || *(path.end() - 1) != '/') {
+        path += '/';
+    }
+    path += m_nameOfFile;
+    return path;
+}
+
 QString File::getExtension() {
     return m_extensionOfFile;
 }
