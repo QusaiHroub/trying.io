@@ -1,12 +1,11 @@
-/* Typing.io
+/* Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
 *
 */
-
 
 #include "history.hpp"
 
@@ -15,40 +14,30 @@ History::History(QObject *parent) : QObject(parent) {
 }
 
 History::~History() {
-    delete m_historyFile;
+    delete m_history;
 }
 
 void History::loadHistory() {
-    if (!m_historyFile->open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-
-    m_history = m_historyFile->readAll();
-
-    m_historyFile->close();
+    m_history->loadAll();
 }
 
 void History::saveHistory() {
-    if (!m_historyFile->open(QIODevice::WriteOnly | QIODevice::Text))
-           return;
-
-    QTextStream WriteToFile(m_historyFile);
-    WriteToFile << m_history;
-
-    m_historyFile->close();
+    m_history->saveFile();
 }
 
-QString History::getHistory() {
-    return m_history;
+QString History::getHistoryContent() {
+    return m_history->getContent();
 }
 
-void History::appenToHistory(QString practiceResult, QString dateAndTime) {
-    if (m_history.length() != 0) {
-        m_history += "\n\n";
+void History::append(QString practiceResult, QString dateAndTime) {
+    QString content;
+    if (m_history->getContent().length() != 0) {
+        content += "\n\n";
     }
-    m_history += "Date And Time: " + dateAndTime + "\n\n" + practiceResult;
+    content += "Date And Time: " + dateAndTime + "\n\n" + practiceResult;
+    m_history->append(content);
 }
 
 void History::clearHistory() {
-    m_history = QString();
-    saveHistory();
+    m_history->clear();
 }

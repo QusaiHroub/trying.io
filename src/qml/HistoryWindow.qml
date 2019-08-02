@@ -27,7 +27,7 @@ Window {
 
     function init() {
         userHistory.loadHistory();
-        history.text = userHistory.getHistory();
+        history.text = userHistory.getHistoryContent();
     }
 
     function close() {

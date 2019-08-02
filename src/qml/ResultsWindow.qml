@@ -33,7 +33,7 @@ Window {
 
     function finish() {
         userHistory.loadHistory();
-        userHistory.appenToHistory(typing.getResult(), userProgress.getDateAndTime());
+        userHistory.append(typing.getResult(), userProgress.getDateAndTime());
         userHistory.saveHistory();
         mainWindow.show();
         hide();

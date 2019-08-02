@@ -1,12 +1,11 @@
-/* Typing.io
+/* Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
 *
 */
-
 
 #ifndef HISTORY_HPP
 #define HISTORY_HPP
@@ -15,14 +14,13 @@
 
 #include <QObject>
 #include <QString>
-#include <QFile>
-#include <QTextStream>
+
+#include "file.hpp"
 
 class History: public QObject {
     Q_OBJECT
 private:
-    QString m_history;
-    QFile *m_historyFile = new QFile("history.file");
+    File *m_history = new File("history", "file", "");
 
 public:
     explicit History(QObject *parent = nullptr);
@@ -33,10 +31,11 @@ signals:
 public slots:
     void loadHistory();
     void saveHistory();
-    QString getHistory();
+
+    QString getHistoryContent();
 
     // Add practice results at the end of practice history.
-    void appenToHistory(QString practiceResult, QString dateAndTime);
+    void append(QString practiceResult, QString dateAndTime);
 
     // Clear history file.
     void clearHistory();

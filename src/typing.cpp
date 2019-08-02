@@ -1,6 +1,6 @@
-/* Typing.io
+/* Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
@@ -15,7 +15,7 @@ Typing::Typing() {
     m_timer_0->moveToThread(&m_qThread_0); // Changes the thread affinity for timer (m_timer_0) and its children
     m_timer_0->connect(&m_qThread_0, SIGNAL(started()), SLOT(start()));
     m_timer_0->connect(&m_qThread_0, SIGNAL(finished()), SLOT(stop()));
-    m_timer_0->setInterval(250); // 250 ms equivalent to 0.25 second.
+    m_timer_0->setInterval(1000); // 1000 ms equivalent to 1 second.
     m_timer_0->stop();
 
     connect(m_timer_1, SIGNAL(timeout()),
@@ -33,6 +33,9 @@ Typing::Typing() {
     m_timer_2->connect(&m_qThread_2, SIGNAL(finished()), SLOT(stop()));
     m_timer_2->setInterval(250);
     m_timer_2->stop();
+
+    m_savePath = QDir::currentPath() + "\\save\\";
+    File::createFolder(m_savePath);
 }
 
 Typing::~Typing() {
@@ -49,7 +52,7 @@ void Typing::timerSlot_0() {
 void Typing::timerSlot_1() {
 
     // To end timers when the elapsed time equal to the end time.
-    if (m_triggerCount >= m_timerEndPoint) {
+    if (m_triggerCount >= m_timeDuration) {
         m_userPro->setIsEndTest(true);
         endTimers();
     }
@@ -58,18 +61,24 @@ void Typing::timerSlot_1() {
 void Typing::timerSlot_2() {
 
     // Update Time Label with remaining time.
-    int remainingTime = m_timerEndPoint - m_triggerCount;
-    m_timeLabel->setProperty("text", remainingTime / 4 + (remainingTime % 4 > 1));
+    int remainingTime = m_timeDuration - m_triggerCount;
+    m_timeLabel->setProperty("text", remainingTime);
 
     // calculate user speed and update user speed label with his speed.
     calcUserSpeed();
     m_userSpeedLabel->setProperty("text", m_userSpeed);
 }
 
-bool Typing::save(QString lang, QString codeText) {
-    m_lang = lang;
-    m_codeText = codeText;
+bool Typing::saveFile(QString name, QString lang, QString codeText) {
+    File newFile(name, lang, m_savePath);
+    newFile.setContent(codeText);
+    newFile.saveFile();
     return true;
+}
+
+void Typing::loadFile() {
+    m_selectedFile->loadAll();
+    m_codeText = m_selectedFile->getContent();
 }
 
 QString Typing::getLnag() {
@@ -101,13 +110,40 @@ QString Typing::getResult() {
     return m_result;
 }
 
+QObject *Typing::getUserProgress() {
+    return m_userProgress;
+}
+
+QString Typing::getSavePath() {
+    return m_savePath;
+}
+
+int Typing::getTimeDuration() {
+    return m_timeDuration;
+}
+
+bool Typing::isTested() {
+    return m_selectedFile != nullptr;
+}
+
 void Typing::setTimeLabel(QObject *timeLabel) {
     m_timeLabel = timeLabel;
 }
 
+void Typing::setUserSpeedLabel(QObject *userSpeedLabel) {
+    m_userSpeedLabel = userSpeedLabel;
+}
+
+void Typing::setSelectedFile(File *selectedFile) {
+    m_selectedFile = selectedFile;
+}
+
+void Typing::setTimeDuration(int timeDurationInMinutes) {
+    m_timeDuration = timeDurationInMinutes * MINUTE;
+}
+
 void Typing::startTimers() {
     m_triggerCount = 0;
-    m_timerEndPoint = TIMER_END_POINT;
     m_qThread_0.start();
     m_qThread_1.start();
     m_qThread_2.start();
@@ -126,10 +162,6 @@ void Typing::freePtr() {
     delete m_timer_0;
     delete m_timer_1;
     delete m_timer_2;
-}
-
-QObject *Typing::getUserProgress() {
-    return m_userProgress;
 }
 
 void Typing::updateUserProgress(QString typedText) {
@@ -170,7 +202,7 @@ void Typing::updateUserProgress(QString typedText) {
 // Calculate user speed.
 void Typing::calcUserSpeed() {
     double speed = (double(m_lengthOfTypedText) / double(WORD_LENGTH))
-            / (double(m_triggerCount) / 240);
+            / (double(m_triggerCount) / MINUTE);
     m_userSpeed = int(speed);
     if (speed - m_userSpeed > 0.499) {
         m_userSpeed++;
@@ -213,9 +245,5 @@ void Typing::determineNextWord(int index) {
             m_userPro->setEndIndexOfNextWord(i + 1);
         }
     }
-}
-
-void Typing::setUserSpeedLabel(QObject *userSpeedLabel) {
-    m_userSpeedLabel = userSpeedLabel;
 }
 
