@@ -381,33 +381,15 @@ Item {
                             anchors.fill: parent
                             clip: true
 
-                            function ensureVisible(r) {
-                                if (contentX >= r.x)
-                                    contentX = r.x;
-                                else if (contentX+width <= r.x + r.width)
-                                    contentX = r.x + r.width - width;
-                                if (contentY >= r.y)
-                                    contentY = r.y;
-                                else if (contentY+height <= r.y + r.height)
-                                    contentY = r.y + r.height - height;
-                            }
-
-                            TextEdit {
+                            TextArea.flickable: TextArea {
                                 id: codeView
                                 text: qsTr("")
-                                readOnly: true
-                                selectionColor: "#3f51b5"
-                                anchors.rightMargin: 4
-                                anchors.leftMargin: 4
-                                anchors.bottomMargin: 4
-                                anchors.topMargin: 4
-                                anchors.fill: parent
                                 horizontalAlignment: Text.AlignLeft
                                 font.pixelSize: 20
-                                onCursorRectangleChanged: codeViewFlick.ensureVisible(cursorRectangle)
-
-
                             }
+
+                            ScrollBar.vertical: ScrollBar { }
+                            ScrollBar.horizontal: ScrollBar { }
                         }
                     }
 
@@ -424,30 +406,11 @@ Item {
                             anchors.fill: parent
                             clip: true
 
-                            function ensureVisible(r) {
-                                if (contentX >= r.x)
-                                    contentX = r.x;
-                                else if (contentX+width <= r.x + r.width)
-                                    contentX = r.x + r.width - width;
-                                if (contentY >= r.y)
-                                    contentY = r.y;
-                                else if (contentY+height <= r.y + r.height)
-                                    contentY = r.y + r.height - height;
-                            }
-
-                            TextEdit {
+                            TextArea.flickable: TextArea {
                                 id: typingCode
                                 text: qsTr("")
-                                selectionColor: "#f44336"
-                                anchors.rightMargin: 4
-                                anchors.leftMargin: 4
-                                anchors.bottomMargin: 4
-                                anchors.topMargin: 4
-                                anchors.fill: parent
                                 horizontalAlignment: Text.AlignLeft
                                 font.pixelSize: 20
-
-                                onCursorRectangleChanged: typingCodeFlick.ensureVisible(cursorRectangle)
 
                                 onTextChanged: {
                                     if(!internal.isStarted) {
@@ -467,6 +430,9 @@ Item {
                                     }
                                 }
                             }
+
+                            ScrollBar.vertical: ScrollBar { }
+                            ScrollBar.horizontal: ScrollBar { }
                         }
                     }
 

@@ -21,7 +21,7 @@ Window {
     minimumWidth: 1150
     width: 1150
     height: 700
-    title: qsTr(Application.name)
+    title: qsTr(Qt.application.name)
 
     // To close the Application.
     function exit () {
