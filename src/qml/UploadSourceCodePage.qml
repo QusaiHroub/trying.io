@@ -169,6 +169,7 @@ Item {
 
                     Text {
                         text: qsTr("Upload Source Code")
+                        font.bold: true
                         anchors.horizontalCenter: parent.horizontalCenter
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
@@ -233,6 +234,7 @@ Item {
 
                     Text {
                         text: qsTr("Save as")
+                        font.bold: true
                         anchors.horizontalCenter: parent.horizontalCenter
                         verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter

@@ -115,7 +115,7 @@ Item {
                             Text {
                                 text: qsTr("Based on Qt 5.13.0\n\n" +
                                            "Authors:\nQusai Hroub <qusaihroub.r@gmail.com>\n\n" +
-                                           "Support:\n<support@trying.io> It doesn't really exists ):\n\n\n" +
+                                           "Support:\n<support@trying.io> It doesn't really exist ):\n\n\n" +
                                            "The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.")
                                 wrapMode: Text.WordWrap
                                 width: parent.width

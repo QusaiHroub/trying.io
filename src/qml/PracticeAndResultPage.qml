@@ -32,6 +32,7 @@ Item {
         readonly property int baseHeight: 1051
         readonly property var timeDuration: [1, 2, 5, 10, 20];
 
+        property string currentPath;
         property bool isStarted: false;
         property bool isLoaded: false;
         property var files;
@@ -42,7 +43,6 @@ Item {
     Component.onCompleted: {
         typing.setTimeLabel(time);
         typing.setUserSpeedLabel(userSpeed)
-        file.initFile("", "", typing.getSavePath(), false)
         userProgress = typing.getUserProgress();
     }
 
@@ -61,6 +61,9 @@ Item {
 
     function init() {
         languageComboBox.currentIndex = 0;
+        internal.currentPath = typing.getSavePath();
+        currnetFolderPath.text = internal.currentPath;
+        file.initFile("", "", internal.currentPath, false);
         filter();
         initComponets();
         typing.initGlobalVarOfUserProgress();
@@ -161,13 +164,13 @@ Item {
             Item {
 
                 Column {
-                    id: column
                     anchors.topMargin: 8
                     anchors.fill: parent
                     spacing: 16
 
                     Text {
                         text: "Select practice text."
+                        font.bold: true
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -250,8 +253,50 @@ Item {
                         }
                     }
 
+                    Item {
+                        width: parent.width - parent.width * 0.16
+                        height: 60
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        Row {
+                            height: parent.height
+
+                            Row {
+                                height: parent.height
+
+                                TButton {
+                                    height: parent.height
+                                    width: height
+                                    text: "<"
+                                    enabled: false
+                                }
+
+                                TButton {
+                                    height: parent.height
+                                    width: height
+                                    text: ">"
+                                    enabled: false
+                                }
+
+                                Item {
+                                    width: 32
+                                    height: parent.height
+                                }
+
+                                Text {
+                                    id: currnetFolderPath
+                                    text: qsTr(typing.getSavePath())
+                                    wrapMode: Text.WrapAnywhere
+                                    width: swipeView.width - swipeView.width * 0.16 - 180
+                                    verticalAlignment: Text.AlignVCenter
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+                            }
+                        }
+                    }
+
                     Rectangle {
-                        height: parent.height - 250
+                        height: parent.height - 260
                         color: "#00000000"
                         anchors.horizontalCenter: parent.horizontalCenter
                         border.color: "#3f51b5"
@@ -285,7 +330,7 @@ Item {
                         }
                     }
 
-                    Column {
+                    Row {
                         anchors.horizontalCenter: parent.horizontalCenter
                         spacing: 16
 
@@ -336,13 +381,15 @@ Item {
             }
 
             Item {
+
                 Column {
-                    width: parent.width
-                    height: parent.height
+                    anchors.topMargin: 8
+                    anchors.fill: parent
                     spacing: 16
 
                     Text {
                         text: "Practice!"
+                        font.bold: true
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -438,7 +485,7 @@ Item {
                     }
 
                     Rectangle {
-                        height: (parent.height - 180) / 2
+                        height: (parent.height - 170) / 2
                         color: "#00000000"
                         anchors.horizontalCenter: parent.horizontalCenter
                         border.color: "#3f51b5"
@@ -485,8 +532,8 @@ Item {
 
                         TButton {
                             id: endButton
-                            height: 50
-                            width: 120
+                            height: 40
+                            width: 200
                             text: "End"
                             onClicked: end();
                         }
@@ -495,20 +542,22 @@ Item {
             }
 
             Item {
+
                 Column {
                     spacing: 16
-                    width: parent.width
-                    height: parent.height
+                    anchors.topMargin: 8
+                    anchors.fill: parent
 
                     Text {
                         text: "Your result"
+                        font.bold: true
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: 24
                     }
 
                     // User result
                     ScrollView {
-                        height: parent.height - 120
+                        height: parent.height - 110
                         clip: true
                         anchors.horizontalCenter: parent.horizontalCenter
 
@@ -526,8 +575,8 @@ Item {
                     TButton {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "finish"
-                        height: 50
-                        width: 120
+                        height: 40
+                        width: 200
                         onClicked: finish()
                     }
                 }

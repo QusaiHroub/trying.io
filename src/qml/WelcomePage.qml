@@ -38,12 +38,12 @@ Item {
         anchors.rightMargin: parent.width * 200 / internal.baseWidth
 
         Item {
-            id: element
             anchors.topMargin: 8
             anchors.fill: parent
 
             Text {
                 text: qsTr("Welcome")
+                font.bold: true
                 anchors.top: parent.top
                 anchors.topMargin: parent.height * 0.1
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -53,13 +53,12 @@ Item {
             }
 
             Item  {
-                id: element1
                 anchors.fill: parent
 
                 Row {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: parent.width * 0.015
+                    spacing: parent.width * 0.05
 
                     T2Button {
                         id: uploadSourceCodeButton
