@@ -93,17 +93,12 @@ QString Typing::getCodeText() {
 QString Typing::getResult() {
     m_result = QString();
     m_result += "Typing Speed: " + QString::number(m_userSpeed) + " word per minutes.\n\n";
-    m_result += "Number of Errors: " + QString::number(m_mistakeCounter) + "\n\n";
-    if (m_mistakeCounter) {
+    m_result += "Number of Errors: " + QString::number(m_charMistakeCounter.size()) + "\n\n";
+    if (m_charMistakeCounter.size()) {
         m_result += "List of Errors:\n\n";
-        int numberOfProcessedMistakes = 0;
-        for (short i = 1; i < SIZE_OF_M_CHAR_MISTAKE_COUNTER &&
-             numberOfProcessedMistakes < m_mistakeCounter; i++) {
-            if (m_charMistakeCounter[int(i)]) {
-                m_result += char(i);
-                m_result += ": Number of mistakes " + QString::number(m_charMistakeCounter[int(i)]) + "\n";
-                numberOfProcessedMistakes++;
-            }
+        for (auto it = m_charMistakeCounter.begin(); it != m_charMistakeCounter.end(); it++) {
+            m_result += it.key();
+            m_result += ": Number of mistakes " + QString::number(it.value()) + "\n";
         }
     }
 
@@ -173,8 +168,7 @@ void Typing::updateUserProgress(QString typedText) {
             if (!m_userPro->isUserMadeMistake()) {
                 m_userPro->setIsUserMadeMistake(true);
                 m_userPro->setIndexOfFirstMistakeOfUser(index);
-                m_mistakeCounter++;
-                m_charMistakeCounter[m_codeText[index].unicode()]++;
+                m_charMistakeCounter[m_codeText[index]]++;
 
                 m_lengthOfTypedText = m_userPro->getIndexOfFirstMistakeOfUser();
             }
@@ -213,10 +207,7 @@ void Typing::calcUserSpeed() {
 }
 
 void Typing::initGlobalVarOfUserProgress() {
-    for (int i = 0; i < SIZE_OF_M_CHAR_MISTAKE_COUNTER; i++) {
-        m_charMistakeCounter[i] = 0;
-    }
-    m_mistakeCounter = 0;
+    m_charMistakeCounter.clear();
     m_userSpeed = 0;
     m_lengthOfTypedText = 0;
 }

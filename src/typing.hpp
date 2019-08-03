@@ -20,6 +20,7 @@
 #include <QCharRef>
 #include <QChar>
 #include <QDir>
+#include <QHash>
 
 // Local includes
 
@@ -31,7 +32,6 @@ class Typing: public QObject {
 private:
     const short WORD_LENGTH = 5;
     const short MINUTE = 60;
-    const short SIZE_OF_M_CHAR_MISTAKE_COUNTER = 256;
 
     QString m_lang;
     QString m_codeText;
@@ -45,13 +45,12 @@ private:
     QThread m_qThread_2;
     QObject *m_timeLabel;
     QObject *m_userProgress = new UserProgress();
-    UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
     QObject *m_userSpeedLabel;
+    QHash<QChar, int> m_charMistakeCounter;
+    UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
     File *m_selectedFile = nullptr;
     int m_triggerCount = 0;
     int m_timeDuration = MINUTE;
-    int m_charMistakeCounter[256] = {};
-    int m_mistakeCounter = 0;
     int m_userSpeed = 0;
     int m_lengthOfTypedText = 0;
 
