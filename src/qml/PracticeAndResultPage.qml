@@ -149,15 +149,15 @@ Item {
         SwipeView {
             id: swipeView
             interactive: false
-            anchors.topMargin: 8
             anchors.fill: parent
             clip: true
 
             Item {
+
                 Column {
                     id: column
-                    width: parent.width
-                    height: parent.height
+                    anchors.topMargin: 8
+                    anchors.fill: parent
                     spacing: 16
 
                     Text {
@@ -206,7 +206,6 @@ Item {
 
 
                     Rectangle {
-                        id: rectangle
                         height: parent.height - 250
                         color: "#00000000"
                         anchors.horizontalCenter: parent.horizontalCenter
