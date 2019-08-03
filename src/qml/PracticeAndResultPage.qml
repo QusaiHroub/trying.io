@@ -30,6 +30,7 @@ Item {
 
         readonly property int baseWidth: 1690
         readonly property int baseHeight: 1051
+        readonly property var timeDuration: [1, 2, 5, 10, 20];
 
         property bool isStarted: false;
         property bool isLoaded: false;
@@ -46,12 +47,16 @@ Item {
     }
 
     function initComponets() {
+        timeDurationComboBox.currentIndex = 0;
+        swipeView.setCurrentIndex(0);
+    }
+
+    function initPractice() {
         typingCode.clear();
         typing.endTimers();
         internal.isLoaded = false;
-        time.text = "60";
+        time.text = typing.getTimeDuration();
         userSpeed.text = "0";
-        swipeView.setCurrentIndex(0);
     }
 
     function init() {
@@ -62,6 +67,7 @@ Item {
     }
 
     function practice() {
+        initPractice();
         langName.text = typing.getLnag();
         codeView.text = typing.getCodeText();
         swipeView.setCurrentIndex(1);
@@ -168,26 +174,64 @@ Item {
                         font.pixelSize: 24
                     }
 
-                    Row {
-                        id: row
-                        height: 60
-                        spacing: 8
+                    Item {
+                        width: parent.width - parent.width * 0.16
                         anchors.horizontalCenter: parent.horizontalCenter
+                        height: 60
 
-                        Text {
-                            text: qsTr("Language: ")
-                            anchors.verticalCenter: parent.verticalCenter
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                            font.pixelSize: 16
+                        Row {
+                            height: parent.height
+                            anchors.left: parent.left
+                            anchors.leftMargin: 0
+                            spacing: 8
+
+                            Text {
+                                text: qsTr("Time duration: ")
+                                anchors.verticalCenter: parent.verticalCenter
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: 16
+                            }
+                            ComboBox {
+                                id: timeDurationComboBox
+                                width: 180
+                                focusPolicy: Qt.TabFocus
+                                spacing: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                delegate: ItemDelegate {
+                                    width: parent.width
+                                    text: internal.timeDuration[index] + "  minute/s"
+                                }
+                                model: internal.timeDuration.length
+
+                                onCurrentIndexChanged: {
+                                    timeDurationComboBox.displayText =
+                                            internal.timeDuration[timeDurationComboBox.currentIndex] + "  minute/s";
+                                    typing.setTimeDuration(internal.timeDuration[timeDurationComboBox.currentIndex]);
+                                }
+                            }
                         }
-                        ComboBox {
-                            id: languageComboBox
-                            width: 180
-                            focusPolicy: Qt.TabFocus
-                            spacing: 0
-                            anchors.verticalCenter: parent.verticalCenter
-                            model: ListModel {
+
+                        Row {
+                            height: parent.height
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            spacing: 8
+
+                            Text {
+                                text: qsTr("Language: ")
+                                anchors.verticalCenter: parent.verticalCenter
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: 16
+                            }
+                            ComboBox {
+                                id: languageComboBox
+                                width: 180
+                                focusPolicy: Qt.TabFocus
+                                spacing: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                model: ListModel {
                                     ListElement {
                                         text: "C";
                                     }
@@ -197,13 +241,14 @@ Item {
                                     ListElement {
                                         text: "Java"
                                     }
-                            }
-                            onCurrentTextChanged: {
-                                filter();
+                                }
+
+                                onCurrentTextChanged: {
+                                    filter();
+                                }
                             }
                         }
                     }
-
 
                     Rectangle {
                         height: parent.height - 250
