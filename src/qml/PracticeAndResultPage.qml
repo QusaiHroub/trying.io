@@ -30,7 +30,9 @@ Item {
 
         readonly property int baseWidth: 1690
         readonly property int baseHeight: 1051
+        readonly property var timeDuration: [1, 2, 5, 10, 20];
 
+        property string currentPath;
         property bool isStarted: false;
         property bool isLoaded: false;
         property var files;
@@ -41,27 +43,34 @@ Item {
     Component.onCompleted: {
         typing.setTimeLabel(time);
         typing.setUserSpeedLabel(userSpeed)
-        file.initFile("", "", typing.getSavePath(), false)
         userProgress = typing.getUserProgress();
     }
 
     function initComponets() {
+        timeDurationComboBox.currentIndex = 0;
+        swipeView.setCurrentIndex(0);
+    }
+
+    function initPractice() {
         typingCode.clear();
         typing.endTimers();
         internal.isLoaded = false;
-        time.text = "60";
+        time.text = typing.getTimeDuration();
         userSpeed.text = "0";
-        swipeView.setCurrentIndex(0);
     }
 
     function init() {
         languageComboBox.currentIndex = 0;
+        internal.currentPath = typing.getSavePath();
+        currnetFolderPath.text = internal.currentPath;
+        file.initFile("", "", internal.currentPath, false);
         filter();
         initComponets();
         typing.initGlobalVarOfUserProgress();
     }
 
     function practice() {
+        initPractice();
         langName.text = typing.getLnag();
         codeView.text = typing.getCodeText();
         swipeView.setCurrentIndex(1);
@@ -155,39 +164,77 @@ Item {
             Item {
 
                 Column {
-                    id: column
                     anchors.topMargin: 8
                     anchors.fill: parent
                     spacing: 16
 
                     Text {
                         text: "Select practice text."
+                        font.bold: true
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: 24
                     }
 
-                    Row {
-                        id: row
-                        height: 60
-                        spacing: 8
+                    Item {
+                        width: parent.width - parent.width * 0.16
                         anchors.horizontalCenter: parent.horizontalCenter
+                        height: 60
 
-                        Text {
-                            text: qsTr("Language: ")
-                            anchors.verticalCenter: parent.verticalCenter
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                            font.pixelSize: 16
+                        Row {
+                            height: parent.height
+                            anchors.left: parent.left
+                            anchors.leftMargin: 0
+                            spacing: 8
+
+                            Text {
+                                text: qsTr("Time duration: ")
+                                anchors.verticalCenter: parent.verticalCenter
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: 16
+                            }
+                            ComboBox {
+                                id: timeDurationComboBox
+                                width: 180
+                                focusPolicy: Qt.TabFocus
+                                spacing: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                delegate: ItemDelegate {
+                                    width: parent.width
+                                    text: internal.timeDuration[index] + "  minute/s"
+                                }
+                                model: internal.timeDuration.length
+
+                                onCurrentIndexChanged: {
+                                    timeDurationComboBox.displayText =
+                                            internal.timeDuration[timeDurationComboBox.currentIndex] + "  minute/s";
+                                    typing.setTimeDuration(internal.timeDuration[timeDurationComboBox.currentIndex]);
+                                }
+                            }
                         }
-                        ComboBox {
-                            id: languageComboBox
-                            width: 180
-                            focusPolicy: Qt.TabFocus
-                            spacing: 0
-                            anchors.verticalCenter: parent.verticalCenter
-                            model: ListModel {
+
+                        Row {
+                            height: parent.height
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            spacing: 8
+
+                            Text {
+                                text: qsTr("Language: ")
+                                anchors.verticalCenter: parent.verticalCenter
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: 16
+                            }
+                            ComboBox {
+                                id: languageComboBox
+                                width: 180
+                                focusPolicy: Qt.TabFocus
+                                spacing: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                model: ListModel {
                                     ListElement {
                                         text: "C";
                                     }
@@ -197,16 +244,59 @@ Item {
                                     ListElement {
                                         text: "Java"
                                     }
-                            }
-                            onCurrentTextChanged: {
-                                filter();
+                                }
+
+                                onCurrentTextChanged: {
+                                    filter();
+                                }
                             }
                         }
                     }
 
+                    Item {
+                        width: parent.width - parent.width * 0.16
+                        height: 60
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        Row {
+                            height: parent.height
+
+                            Row {
+                                height: parent.height
+
+                                TButton {
+                                    height: parent.height
+                                    width: height
+                                    text: "<"
+                                    enabled: false
+                                }
+
+                                TButton {
+                                    height: parent.height
+                                    width: height
+                                    text: ">"
+                                    enabled: false
+                                }
+
+                                Item {
+                                    width: 32
+                                    height: parent.height
+                                }
+
+                                Text {
+                                    id: currnetFolderPath
+                                    text: qsTr(typing.getSavePath())
+                                    wrapMode: Text.WrapAnywhere
+                                    width: swipeView.width - swipeView.width * 0.16 - 180
+                                    verticalAlignment: Text.AlignVCenter
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+                            }
+                        }
+                    }
 
                     Rectangle {
-                        height: parent.height - 250
+                        height: parent.height - 260
                         color: "#00000000"
                         anchors.horizontalCenter: parent.horizontalCenter
                         border.color: "#3f51b5"
@@ -240,7 +330,7 @@ Item {
                         }
                     }
 
-                    Column {
+                    Row {
                         anchors.horizontalCenter: parent.horizontalCenter
                         spacing: 16
 
@@ -291,13 +381,15 @@ Item {
             }
 
             Item {
+
                 Column {
-                    width: parent.width
-                    height: parent.height
+                    anchors.topMargin: 8
+                    anchors.fill: parent
                     spacing: 16
 
                     Text {
                         text: "Practice!"
+                        font.bold: true
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -393,7 +485,7 @@ Item {
                     }
 
                     Rectangle {
-                        height: (parent.height - 180) / 2
+                        height: (parent.height - 170) / 2
                         color: "#00000000"
                         anchors.horizontalCenter: parent.horizontalCenter
                         border.color: "#3f51b5"
@@ -440,8 +532,8 @@ Item {
 
                         TButton {
                             id: endButton
-                            height: 50
-                            width: 120
+                            height: 40
+                            width: 200
                             text: "End"
                             onClicked: end();
                         }
@@ -450,20 +542,22 @@ Item {
             }
 
             Item {
+
                 Column {
                     spacing: 16
-                    width: parent.width
-                    height: parent.height
+                    anchors.topMargin: 8
+                    anchors.fill: parent
 
                     Text {
                         text: "Your result"
+                        font.bold: true
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: 24
                     }
 
                     // User result
                     ScrollView {
-                        height: parent.height - 120
+                        height: parent.height - 110
                         clip: true
                         anchors.horizontalCenter: parent.horizontalCenter
 
@@ -481,8 +575,8 @@ Item {
                     TButton {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "finish"
-                        height: 50
-                        width: 120
+                        height: 40
+                        width: 200
                         onClicked: finish()
                     }
                 }

@@ -56,13 +56,14 @@ Item {
 
             Text {
                 text: "Your history"
+                font.bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: 24
             }
 
             // User history
             Rectangle {
-                height: parent.height - 120
+                height: parent.height - 110
                 color: "#00000000"
                 border.width: 0
                 width: parent.width
@@ -93,7 +94,7 @@ Item {
                 // clear History button.
                 TButton {
                     text: "clear"
-                    height: 50
+                    height: 40
                     width: 200
                     onClicked: {
                         userHistory.clearHistory();

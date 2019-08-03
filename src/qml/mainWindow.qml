@@ -119,6 +119,17 @@ Window {
                         }
 
                         TButton {
+                            id: aboutButton
+                            height: 50
+                            width: 230
+                            text: "About"
+                            onClicked: {
+                                historyPage.init();
+                                swipeView1.setCurrentIndex(4);
+                            }
+                        }
+
+                        TButton {
                             id: exiTButton
                             height: 50
                             width: 230
@@ -160,6 +171,10 @@ Window {
             HistoryPage {
                 id: historyPage
                 mainWindow: mainWindow
+            }
+
+            AboutPage {
+                id: aboutPage
             }
         }
     }
