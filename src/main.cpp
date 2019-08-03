@@ -33,6 +33,12 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("Trying.io");
 
     /*!
+     * \brief QCoreApplication::setApplicationVersion
+     * This property holds the version of this application.
+     */
+    QCoreApplication::setApplicationVersion("0.2");
+
+    /*!
      * \brief engine
      * To provide a convenient way to load a single QML file.
      */
