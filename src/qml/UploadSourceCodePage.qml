@@ -13,6 +13,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.12
 
 import trying.io.typing 0.2
+import trying.io.file 0.2
 
 Item {
     width: 1690
@@ -27,10 +28,33 @@ Item {
         readonly property int baseWidth: 1690
         readonly property int baseHeight: 1051
 
+        property string currentPath;
+        property var files: [];
+        property var tempFiles: [];
+        property var folderList: [];
         property var language : ["c", "cpp", "java"]
     }
 
     function init() {
+        swipeView.setCurrentIndex(0);
+        if (editor.text !== "") {
+            unsaveCodeDialog.open();
+        } else {
+            initComponent();
+        }
+
+        refreshTimer.start();
+    }
+
+    function initSaveAs() {
+        internal.currentPath = typing.getSavePath();
+        currnetFolderPath.text = internal.currentPath;
+        file.initFile("", "", internal.currentPath, false);
+        refresh();
+    }
+
+    function initComponent() {
+        swipeView.setCurrentIndex(0);
         languageComboBox.currentIndex = 0;
         editor.clear();
         fileName.clear();
@@ -41,13 +65,49 @@ Item {
             fileNameDialog.setVisible(true);
             return;
         }
-        if (editor.text.length === 0) {
-            codeTextDialog.open();
-            return;
-        }
 
         typing.saveFile(fileName.text, internal.language[languageComboBox.currentIndex], editor.text);
-        init();
+        initComponent();
+        refreshTimer.stop();
+    }
+
+    function refresh() {
+        listView.currentIndex = -1;
+        listView.model = 0;
+        internal.files = file.scanDir();
+        internal.folderList = [];
+
+        for (var i in internal.files) {
+            if (internal.files[i].isFile() === false) {
+                internal.folderList.push(internal.files[i]);
+            }
+        }
+
+        listView.model = internal.folderList.length;
+    }
+
+    File {
+        id: file
+    }
+
+    Timer {
+        id: refreshTimer
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            internal.tempFiles = file.scanDir();
+            if (internal.tempFiles.length !== internal.files.length) {
+                refresh();
+            } else {
+                for (var i in internal.files) {
+                    if (internal.files[i].getName() !== internal.tempFiles[i].getName()) {
+                        refresh();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     MessageDialog {
@@ -68,6 +128,19 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: unsaveCodeDialog
+        title: "Unsaved code"
+        text: "You have unsaved code, Do you want to save or discard them."
+        standardButtons: StandardButton.Save | StandardButton.Discard
+        onDiscard: {
+            initComponent()
+        }
+        onAccepted: {
+            swipeView.setCurrentIndex(1);
+        }
+    }
+
     Rectangle {
         color: "#d9ffffff"
         border.color: "#3f51b5"
@@ -81,105 +154,259 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: parent.width * 200 / internal.baseWidth
 
-        Column {
-            anchors.topMargin: 8
+        SwipeView {
+            id: swipeView
+            interactive: false
             anchors.fill: parent
-            spacing: 16
+            clip: true
 
-            Text {
-                text: qsTr("Upload Source Code")
-                anchors.horizontalCenter: parent.horizontalCenter
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                font.pixelSize: 24
-            }
+            Item {
 
-            Row {
-                height: 60
-                spacing: 8
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Text {
-                    text: qsTr("File name: ")
-                    anchors.verticalCenter: parent.verticalCenter
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pixelSize: 16
-                }
-                TextField {
-                    id: fileName
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 180
-                }
-            }
-
-            Row {
-                height: 60
-                spacing: 8
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Text {
-                    text: qsTr("Language: ")
-                    anchors.verticalCenter: parent.verticalCenter
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pixelSize: 16
-                }
-                ComboBox {
-                    id: languageComboBox
-                    width: 180
-                    focusPolicy: Qt.TabFocus
-                    spacing: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    model: ListModel {
-                        ListElement {
-                            text: "C";
-                        }
-                        ListElement {
-                            text: "C++";
-                        }
-                        ListElement {
-                            text: "Java"
-                        }
-                    }
-                }
-            }
-
-            Rectangle {
-                height: parent.height - 260
-                color: "#00000000"
-                anchors.horizontalCenter: parent.horizontalCenter
-                border.color: "#3f51b5"
-                border.width: 2
-                width: parent.width - parent.width * 0.16
-                Flickable {
-                    id: flickable
+                Column {
+                    anchors.topMargin: 8
                     anchors.fill: parent
-                    clip: true
+                    spacing: 16
 
-                    TextArea.flickable: TextArea {
-                        id: editor
-                        text: qsTr("")
-                        horizontalAlignment: Text.AlignLeft
-                        font.pixelSize: 20
+                    Text {
+                        text: qsTr("Upload Source Code")
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 24
                     }
 
-                    ScrollBar.vertical: ScrollBar { }
-                    ScrollBar.horizontal: ScrollBar { }
+
+
+                    Rectangle {
+                        height: parent.height - 110
+                        color: "#00000000"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        border.color: "#3f51b5"
+                        border.width: 2
+                        width: parent.width - parent.width * 0.16
+                        Flickable {
+                            id: flickable
+                            anchors.fill: parent
+                            clip: true
+
+                            TextArea.flickable: TextArea {
+                                id: editor
+                                text: qsTr("")
+                                horizontalAlignment: Text.AlignLeft
+                                font.pixelSize: 20
+                            }
+
+                            ScrollBar.vertical: ScrollBar { }
+                            ScrollBar.horizontal: ScrollBar { }
+                        }
+                    }
+
+                    Row {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 16
+
+                        TButton {
+                            id: saveAsButton
+                            width: 200
+                            height: 40
+                            text: "save as"
+                            onClicked: {
+                                if (editor.text.length === 0) {
+                                    codeTextDialog.open();
+                                    return;
+                                }
+
+                                initSaveAs();
+                                swipeView.setCurrentIndex(1);
+                            }
+                        }
+                    }
                 }
             }
 
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 16
+            Item {
 
-                TButton {
-                    id: saveButton
-                    width: 200
-                    height: 40
-                    text: "save"
-                    onClicked: {
-                        save();
+                Column {
+                    anchors.topMargin: 8
+                    anchors.fill: parent
+                    spacing: 16
+
+                    Text {
+                        text: qsTr("Save as")
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.pixelSize: 24
+                    }
+
+                    Item {
+                        width: parent.width - parent.width * 0.16
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        height: 60
+
+                        Row {
+                            height: parent.height
+                            anchors.left: parent.left
+                            anchors.leftMargin: 0
+                            spacing: 8
+
+                            Text {
+                                text: qsTr("File name: ")
+                                anchors.verticalCenter: parent.verticalCenter
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: 16
+                            }
+                            TextField {
+                                id: fileName
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 180
+                            }
+                        }
+
+                        Row {
+                            height: parent.height
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                            spacing: 8
+
+                            Text {
+                                text: qsTr("Language: ")
+                                anchors.verticalCenter: parent.verticalCenter
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                                font.pixelSize: 16
+                            }
+                            ComboBox {
+                                id: languageComboBox
+                                width: 180
+                                focusPolicy: Qt.TabFocus
+                                spacing: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                model: ListModel {
+                                    ListElement {
+                                        text: "C";
+                                    }
+                                    ListElement {
+                                        text: "C++";
+                                    }
+                                    ListElement {
+                                        text: "Java"
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Item {
+                        width: parent.width - parent.width * 0.16
+                        height: 60
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        Row {
+                            height: parent.height
+
+                            Row {
+                                height: parent.height
+
+                                TButton {
+                                    height: parent.height
+                                    width: height
+                                    text: "<"
+                                    enabled: false
+                                }
+
+                                TButton {
+                                    height: parent.height
+                                    width: height
+                                    text: ">"
+                                    enabled: false
+                                }
+
+                                Item {
+                                    width: 32
+                                    height: parent.height
+                                }
+
+                                Text {
+                                    id: currnetFolderPath
+                                    text: qsTr(typing.getSavePath())
+                                    wrapMode: Text.WrapAnywhere
+                                    width: swipeView.width - swipeView.width * 0.16 - 180
+                                    verticalAlignment: Text.AlignVCenter
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        height: parent.height - 260
+                        color: "#00000000"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        border.color: "#3f51b5"
+                        border.width: 2
+                        width: parent.width - parent.width * 0.16
+
+                        GridView {
+                            id: listView
+                            cellWidth: 142
+                            cellHeight: 142
+                            anchors.rightMargin: 0
+                            anchors.leftMargin: 8
+                            anchors.bottomMargin: 8
+                            anchors.topMargin: 8
+                            anchors.fill: parent
+                            clip: true
+                            enabled: false
+
+                            delegate: T2Button {
+                                width: 133
+                                height: 133
+                                text: internal.folderList !== undefined ? internal.folderList[index].getName() : "";
+                                onClicked: {
+                                    listView.currentIndex = index
+                                }
+                            }
+
+                            highlight: Rectangle {
+                                color: "#3f51b5"
+                                border.width: 0
+                            }
+                        }
+                    }
+
+                    Item {
+                        height: 40
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width - parent.width * 0.16
+
+                        Row {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            spacing: 16
+                            height: parent.height
+
+                            TButton {
+                                id: saveButton
+                                width: 200
+                                height: parent.height
+                                text: "save"
+                                onClicked: {
+                                    save();
+                                }
+                            }
+
+                            TButton {
+                                id: createFolderButton
+                                width: 200
+                                height: parent.height
+                                text: "Create new folder"
+                                enabled: false
+                                onClicked: {
+
+                                }
+                            }
+                        }
                     }
                 }
             }
