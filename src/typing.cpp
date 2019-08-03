@@ -36,6 +36,8 @@ Typing::Typing() {
 
     m_savePath = QDir::currentPath() + "\\save\\";
     File::createFolder(m_savePath);
+
+    initLanguageTable();
 }
 
 Typing::~Typing() {
@@ -82,7 +84,7 @@ void Typing::loadFile() {
 }
 
 QString Typing::getLnag() {
-    return m_lang;
+    return m_languageTable[m_selectedFile->getExtension()];;
 }
 
 QString Typing::getCodeText() {
@@ -211,6 +213,21 @@ void Typing::initGlobalVarOfUserProgress() {
     m_userSpeed = 0;
     m_lengthOfTypedText = 0;
 }
+
+void Typing::initLanguageTable() {
+    QString langList[] = {"C", "C++", "Java"};
+    QList<QString> langEx[] = {
+                               {"c", "h"},
+                               {"cc", "cpp", "cxx", "c++", "hh", "hpp", "hxx", "h++"},
+                               {"java"}
+                              };
+    for(int i = 0; i < 3; i++) {
+        for (QList<QString>::Iterator it = langEx[i].begin(); it != langEx[i].end(); it++) {
+            m_languageTable[*it] = langList[i];
+        }
+    }
+}
+
 
 void Typing::determineNextWord(int index) {
     if (m_codeText[index] == ' ' || m_codeText[index] == '\n') {

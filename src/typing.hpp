@@ -33,7 +33,6 @@ private:
     const short WORD_LENGTH = 5;
     const short MINUTE = 60;
 
-    QString m_lang;
     QString m_codeText;
     QString m_result;
     QString m_savePath;
@@ -47,6 +46,7 @@ private:
     QObject *m_userProgress = new UserProgress();
     QObject *m_userSpeedLabel;
     QHash<QChar, int> m_charMistakeCounter;
+    QHash<QString, QString> m_languageTable;
     UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
     File *m_selectedFile = nullptr;
     int m_triggerCount = 0;
@@ -55,6 +55,7 @@ private:
     int m_lengthOfTypedText = 0;
 
     void determineNextWord(int index);
+    void initLanguageTable();
 
 public:
     Typing();
