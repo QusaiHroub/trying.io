@@ -42,46 +42,68 @@ void File::saveFile() {
     m_file->close();
 }
 
-QVariantList File::scanDir() {
+QVariantList File::scanForFiles() {
     QVariant item;
     QVariantList list;
     QDir dir(m_pathOfFile);
+    dir.setFilter(QDir::Files);
+    dir.setNameFilters(m_extensionList);
 
     if (!dir.exists() || !dir.isReadable()) {
         return list;
     }
 
     QDirIterator iter(dir);
+
     while (iter.hasNext()) {
         QString next = iter.next();
         QString base = iter.fileName();
+        QString extetension;
+
         if (base == "." || base == "..") {
             continue;
         }
-        if (base.endsWith(".c") || base.endsWith(".cpp") || base.endsWith(".java")) {
-            QString extetension;
 
-            while (base.length()) {
-                if (base[base.length() - 1] == '.') {
-                    base.remove(base.length() - 1,1);
-                    break;
-                }
-                extetension.insert(0, base[base.length() - 1]);
+        while (base.length()) {
+            if (base[base.length() - 1] == '.') {
                 base.remove(base.length() - 1,1);
+                break;
             }
-
-            File *file = new File(base, extetension, iter.path());
-            item.setValue(file);
-            list.append(item);
+            extetension.insert(0, base[base.length() - 1]);
+            base.remove(base.length() - 1,1);
         }
 
-        QDir qDir(next);
+        File *file = new File(base, extetension, iter.path());
+        item.setValue(file);
+        list.append(item);
+    }
 
-        if (!qDir.isEmpty()) {
-            File *file = new File(base, "", iter.path(), false);
-            item.setValue(file);
-            list.append(item);
+    return list;
+}
+
+QVariantList File::scanForDirectories() {
+    QVariant item;
+    QVariantList list;
+    QDir dir(m_pathOfFile);
+    dir.setFilter(QDir::Dirs);
+
+    if (!dir.exists() || !dir.isReadable()) {
+        return list;
+    }
+
+    QDirIterator iter(dir);
+
+    while (iter.hasNext()) {
+        QString next = iter.next();
+        QString base = iter.fileName();
+
+        if (base == "." || base == "..") {
+            continue;
         }
+
+        File *file = new File(base, "", iter.path(), false);
+        item.setValue(file);
+        list.append(item);
     }
 
     return list;

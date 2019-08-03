@@ -122,13 +122,19 @@ Item {
     function filter() {
         listView.currentIndex = -1;
         listView.model = 0;
-        internal.files = file.scanDir();
+        internal.files = file.scanForFiles();
         internal.filesList = [];
 
         for (var i in internal.files) {
             if (internal.files[i].getExtension() === internal.language[languageComboBox.currentIndex]) {
                 internal.filesList.push(internal.files[i]);
             }
+        }
+
+        internal.files = file.scanForDirectories();
+
+        for (var it in internal.files) {
+            internal.filesList.push(internal.files[it]);
         }
 
         listView.model = internal.filesList.length;

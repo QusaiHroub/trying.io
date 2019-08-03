@@ -26,6 +26,8 @@ private:
     QString m_pathOfFile;
     QFile *m_file = nullptr;
     bool m_type = true;
+    QStringList m_extensionList = {"*.c", "*.h", "*.cc", "*.cpp", "*.cxx", "*.c++",
+                                   "*.hh", "*.hpp", "*.hxx", "*.h++", "*.java"};
 
 public:
     explicit File(QObject *parent = nullptr);
@@ -39,7 +41,8 @@ public slots:
 
     void loadAll();
     void saveFile();
-    QVariantList scanDir();
+    QVariantList scanForFiles();
+    QVariantList scanForDirectories();
 
     static void createFolder(QString path);
     static void removeFolder(QString path);

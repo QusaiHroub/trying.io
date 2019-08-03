@@ -29,7 +29,6 @@ Item {
         readonly property int baseHeight: 1051
 
         property string currentPath;
-        property var files: [];
         property var tempFiles: [];
         property var folderList: [];
         property var language : ["c", "cpp", "java"]
@@ -74,15 +73,7 @@ Item {
     function refresh() {
         listView.currentIndex = -1;
         listView.model = 0;
-        internal.files = file.scanDir();
-        internal.folderList = [];
-
-        for (var i in internal.files) {
-            if (internal.files[i].isFile() === false) {
-                internal.folderList.push(internal.files[i]);
-            }
-        }
-
+        internal.folderList = file.scanForDirectories();
         listView.model = internal.folderList.length;
     }
 
@@ -96,8 +87,8 @@ Item {
         running: true
         repeat: true
         onTriggered: {
-            internal.tempFiles = file.scanDir();
-            if (internal.tempFiles.length !== internal.files.length) {
+            internal.tempFiles = file.scanForDirectories();
+            if (internal.tempFiles.length !== internal.folderList.length) {
                 refresh();
             } else {
                 for (var i in internal.files) {
