@@ -1,6 +1,6 @@
-/* UI Typing.io
+/* UI Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
@@ -8,29 +8,24 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Window 2.7
+import QtQuick.Window 2.12
 import QtQuick.Dialogs 1.2
-import typing.io 0.1
+import QtQuick.Controls 2.12
+
+import trying.io.typing 0.2
 
 Window {
     id: mainWindow
     visible: true
-    width: 640
-    height: 480
-    title: qsTr("Typing.io")
-    flags: Qt.MSWindowsFixedSizeDialogHint | Qt.Window | Qt.WindowCloseButtonHint
-
-    property bool isSave: false;
+    minimumHeight: 700
+    minimumWidth: 1150
+    width: 1150
+    height: 700
+    title: qsTr(Qt.application.name)
 
     // To close the Application.
     function exit () {
         Qt.quit();
-    }
-
-    function loadHistory() {
-        historyWindow.init();
-        historyWindow.show()
-        hide();
     }
 
     // Shortcut to call exit function.
@@ -42,126 +37,145 @@ Window {
         }
     }
 
-    Column {
-        spacing: 8
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        Text {
-            text: qsTr("Main Menu")
-            anchors.horizontalCenter: parent.horizontalCenter
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            font.pixelSize: 24
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 60
-            color: "#ffffff"
-            border.color: "#00000000"
-        }
-
-        Column {
-            spacing: 4
-
-            Tbutton {
-                id: uploadSourceCodeButton
-                height: 50
-                width: 230
-                buttonText: "Upload Source Code"
-                onClicked: {
-                    uploadSourceCodeWindow.init();
-                    uploadSourceCodeWindow.show();
-                    hide();
-                }
-            }
-
-            Tbutton {
-                id: practiceButton
-                height: 50
-                width: 230
-                buttonText: "Practice!"
-                onClicked: {
-                    if (isSave) {
-                        practiceInterfaceWindow.init();
-                        practiceInterfaceWindow.show();
-                        hide();
-                    } else {
-                        notSaveDialog.open()
-                    }
-                }
-            }
-
-            Tbutton {
-                id: historyButton
-                height: 50
-                width: 230
-                buttonText: "History"
-                onClicked: {
-                    loadHistory();
-                }
-            }
-
-            Tbutton {
-                id: exitButton
-                height: 50
-                width: 230
-                buttonText: "Exit"
-                onClicked: {
-                    exit();
-                }
-            }
-        }
-
-    }
-
-    UploadSourceCodeWindow {
-        id: uploadSourceCodeWindow
-        width: 800
-        height: 800
-        mainWindow: mainWindow
-        typing: typing
-    }
-
-    PracticeInterfaceWindow {
-        id: practiceInterfaceWindow
-        width: 800
-        height: 800
-        mainWindow: mainWindow
-        typing: typing
-        resultsWindow: resultsWindow
-    }
-
-    ResultsWindow {
-        id: resultsWindow
-        width: 640
-        height: 480
-        mainWindow: mainWindow
-        typing: typing
-    }
-
-    HistoryWindow {
-        id: historyWindow
-        width: 800
-        height: 800
-        mainWindow: mainWindow
+    Image {
+        anchors.fill: parent
+        source: "qrc:/image/background.png"
     }
 
     Typing {
         id: typing
     }
 
-    // dialog that shown when the user going to practice without save code text.
-    MessageDialog {
-        id: notSaveDialog
-        title: "Error"
-        text: "Upload code befor start the practice"
-        onAccepted: {
-            uploadSourceCodeWindow.init();
-            uploadSourceCodeWindow.show();
-            hide();
+    Row {
+        anchors.fill: parent
+        Rectangle {
+            id: leftBar
+            width: 230
+            height: parent.height
+            color: "#d9ffffff"
+            property int currentIndex;
+            Rectangle {
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                anchors.top: parent.top
+                anchors.topMargin: 0
+                width: 2
+                border.width: 0;
+                color: "#3f51b5"
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+            }
+
+            ScrollView {
+                anchors.fill: parent
+                clip: true
+
+                Item {
+                    Column {
+                        spacing: 8
+                        anchors.fill: parent
+
+                        TButton {
+                            id: welcomePageButton
+                            height: 50
+                            width: 230
+                            text: "Welcome"
+                            onClicked: {
+                                swipeView1.setCurrentIndex(0);
+                            }
+                        }
+
+                        TButton {
+                            id: uploadSourceCodeButton
+                            height: 50
+                            width: 230
+                            text: "Upload Source Code"
+                            onClicked: {
+                                uploadSourceCodePage.init();
+                                swipeView1.setCurrentIndex(1);
+                            }
+                        }
+
+                        TButton {
+                            id: practiceButton
+                            height: 50
+                            width: 230
+                            text: "Practice!"
+                            onClicked: {
+                                practiceAndResultPage.init();
+                                swipeView1.setCurrentIndex(2);
+                            }
+                        }
+
+                        TButton {
+                            id: historyButton
+                            height: 50
+                            width: 230
+                            text: "History"
+                            onClicked: {
+                                historyPage.init();
+                                swipeView1.setCurrentIndex(3);
+                            }
+                        }
+
+                        TButton {
+                            id: aboutButton
+                            height: 50
+                            width: 230
+                            text: "About"
+                            onClicked: {
+                                historyPage.init();
+                                swipeView1.setCurrentIndex(4);
+                            }
+                        }
+
+                        TButton {
+                            id: exiTButton
+                            height: 50
+                            width: 230
+                            text: "Exit"
+                            onClicked: {
+                                exit();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        SwipeView {
+            id:swipeView1
+            width: parent.width - leftBar.width
+            height: parent.height
+            orientation: Qt.Vertical
+            interactive: false
+            currentIndex: 0
+            clip: true
+
+            WelcomePage {
+                id: welcomePage
+            }
+
+            UploadSourceCodePage {
+                id: uploadSourceCodePage
+                mainWindow: mainWindow
+                typing: typing
+            }
+
+            PracticeAndResultPage {
+                id: practiceAndResultPage
+                mainWindow: mainWindow
+                typing: typing
+            }
+
+            HistoryPage {
+                id: historyPage
+                mainWindow: mainWindow
+            }
+
+            AboutPage {
+                id: aboutPage
+            }
         }
     }
-
 }

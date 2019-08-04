@@ -1,6 +1,6 @@
-/* UI Typing.io
+/* UI Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
@@ -8,10 +8,9 @@
 */
 
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.12
 
 Button {
-    property var buttonText: "button"
 
     // Button background.
     background: Rectangle {
@@ -19,14 +18,6 @@ Button {
         border.width: 0
         border.color: "#00000000"
         anchors.fill: parent
-
-        Text {
-            text: buttonText
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-            anchors.fill: parent
-            font.pixelSize: 16
-        }
 
         // The line at bottom of button.
         Rectangle {

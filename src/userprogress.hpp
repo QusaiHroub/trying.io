@@ -1,6 +1,6 @@
-/* Typing.io
+/* Trying.io
 *
-* This file is part of the Typing.io.
+* This file is part of the Trying.io.
 *
 * Authors:
 * Qusai Hroub <qusaihroub.r@gmail.com>
@@ -37,12 +37,12 @@ public:
 signals:
 
 public slots:
+    QString getDateAndTime();
     int getStartIndexOfNextWord();
     int getEndIndexOfNextWord();
-    bool isUserMadeMistake();
     int getIndexOfFirstMistakeOfUser();
+    bool isUserMadeMistake();
     bool isEndTest();
-    QString getDateAndTime();
     void initDateAndTime();
     void init();
 };
