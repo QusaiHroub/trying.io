@@ -16,6 +16,7 @@ import trying.io.typing 0.2
 import trying.io.userprogress 0.2
 import trying.io.history 0.2
 import trying.io.file 0.2
+import trying.io.folder 0.2
 
 Item {
     width: 1690
@@ -32,15 +33,21 @@ Item {
         readonly property int baseHeight: 1051
         readonly property var timeDuration: [1, 2, 5, 10, 20];
 
-        property string currentPath;
         property bool isStarted: false;
         property bool isLoaded: false;
-        property var files;
+        property var tempFolders: [];
+        property var folders: [];
+        property var tempFiles: [];
+        property var files: [];
         property var filesList: [];
         property var language : ["c", "cpp", "java"];
+        property TFolder folder;
+        property var stack: [];
+        property var rStack: [];
     }
 
     Component.onCompleted: {
+        internal.folder = typing.getSaveFolder();
         typing.setTimeLabel(time);
         typing.setUserSpeedLabel(userSpeed)
         userProgress = typing.getUserProgress();
@@ -49,9 +56,14 @@ Item {
     function initComponets() {
         timeDurationComboBox.currentIndex = 0;
         swipeView.setCurrentIndex(0);
+        internal.stack = [];
+        internal.rStack = [];
+        rButton.enabled = false;
+        lButton.enabled = false;
     }
 
     function initPractice() {
+        refreshTimer.stop();
         typingCode.clear();
         typing.endTimers();
         internal.isLoaded = false;
@@ -60,13 +72,13 @@ Item {
     }
 
     function init() {
+        internal.folder = typing.getSaveFolder();
         languageComboBox.currentIndex = 0;
-        internal.currentPath = typing.getSavePath();
-        currnetFolderPath.text = internal.currentPath;
-        file.initFile("", "", internal.currentPath, false);
+        currnetFolderPath.text = internal.folder.getFullPath();
         filter();
         initComponets();
         typing.initGlobalVarOfUserProgress();
+        refreshTimer.start();
     }
 
     function practice() {
@@ -81,6 +93,7 @@ Item {
     }
 
     function repractice() {
+        refreshTimer.stop();
         if (!typing.isTested()) {
             loadLastSaveDialog.open();
             return;
@@ -116,13 +129,15 @@ Item {
         userHistory.loadHistory();
         userHistory.append(result.text, userProgress.getDateAndTime());
         userHistory.saveHistory();
-        init();
     }
 
     function filter() {
         listView.currentIndex = -1;
         listView.model = 0;
-        internal.files = file.scanDir();
+        if (internal.folder == null) {
+            internal.folder = typing.getSaveFolder();
+        }
+        internal.files = internal.folder.scanForFiles();
         internal.filesList = [];
 
         for (var i in internal.files) {
@@ -131,15 +146,75 @@ Item {
             }
         }
 
+        internal.folders = internal.folder.scanForDirectories();
+
+        for (var it in internal.folders) {
+            internal.filesList.push(internal.folders[it]);
+        }
+
         listView.model = internal.filesList.length;
     }
 
-    File {
-        id: file
+    function scanFolder(folder) {
+        internal.stack.push(internal.folder);
+        internal.rStack = [];
+        internal.folder = folder;
+        currnetFolderPath.text = internal.folder.getFullPath();
+        filter();
+        rButton.enabled = internal.stack.length > 0;
+        lButton.enabled = internal.rStack.length > 0;
+    }
+
+    function rScanFolder(folder) {
+        internal.stack.push(internal.folder);
+        internal.rStack.pop();
+        internal.folder = folder;
+        currnetFolderPath.text = internal.folder.getFullPath();
+        filter();
+    }
+
+    function lScanFolder(folder) {
+        internal.rStack.push(internal.folder);
+        internal.stack.pop();
+        internal.folder = folder;
+        currnetFolderPath.text = internal.folder.getFullPath();
+        filter();
     }
 
     History {
         id: userHistory
+    }
+
+    Timer {
+        id: refreshTimer
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            internal.tempFiles = internal.folder.scanForFiles();
+            if (internal.tempFiles.length !== internal.files.length) {
+                filter();
+            } else {
+                for (var i in internal.files) {
+                    if (internal.files[i].getName() !== internal.tempFiles[i].getName()) {
+                        filter();
+                        break;
+                    }
+                }
+            }
+
+            internal.tempFolders = internal.folder.scanForDirectories();
+            if (internal.tempFolders.length !== internal.folders.length) {
+                filter();
+            } else {
+                for (var it in internal.folders) {
+                    if (internal.folders[it].getName() !== internal.tempFolders[it].getName()) {
+                        filter();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     Rectangle {
@@ -265,17 +340,29 @@ Item {
                                 height: parent.height
 
                                 TButton {
+                                    id: rButton
                                     height: parent.height
                                     width: height
                                     text: "<"
                                     enabled: false
+                                    onClicked: {
+                                        lScanFolder(internal.stack[internal.stack.length - 1]);
+                                        enabled = internal.stack.length > 0;
+                                        lButton.enabled = internal.rStack.length > 0;
+                                    }
                                 }
 
                                 TButton {
+                                    id: lButton
                                     height: parent.height
                                     width: height
                                     text: ">"
                                     enabled: false
+                                    onClicked: {
+                                        rScanFolder(internal.rStack[internal.rStack.length - 1]);
+                                        enabled = internal.rStack.length > 0;
+                                        rButton.enabled = internal.stack.length > 0;
+                                    }
                                 }
 
                                 Item {
@@ -285,7 +372,7 @@ Item {
 
                                 Text {
                                     id: currnetFolderPath
-                                    text: qsTr(typing.getSavePath())
+                                    text: qsTr(internal.folder.getFullPath())
                                     wrapMode: Text.WrapAnywhere
                                     width: swipeView.width - swipeView.width * 0.16 - 180
                                     verticalAlignment: Text.AlignVCenter
@@ -314,11 +401,16 @@ Item {
                             anchors.fill: parent
                             clip: true
 
-                            delegate: T2Button {
+                            delegate: T3Button {
                                 width: 133
                                 height: 133
+                                noteColor: internal.filesList[index] instanceof TFile ? "#009688" : "#f44336";
                                 text: internal.filesList !== undefined ? internal.filesList[index].getName() : "";
                                 onClicked: {
+                                    if (internal.filesList[index] instanceof TFolder) {
+                                        scanFolder(internal.filesList[index]);
+                                        return;
+                                    }
                                     listView.currentIndex = index
                                 }
                             }
@@ -477,6 +569,7 @@ Item {
                                 text: qsTr("")
                                 horizontalAlignment: Text.AlignLeft
                                 font.pixelSize: 20
+                                enabled: false
                             }
 
                             ScrollBar.vertical: ScrollBar { }

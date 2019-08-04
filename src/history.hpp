@@ -15,12 +15,14 @@
 #include <QObject>
 #include <QString>
 
+// Local includes
+
 #include "file.hpp"
 
 class History: public QObject {
     Q_OBJECT
 private:
-    File *m_history = new File("history", "file", "");
+    TFile *m_history = new TFile("history", "file", QDir::currentPath());
 
 public:
     explicit History(QObject *parent = nullptr);

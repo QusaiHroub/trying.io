@@ -20,6 +20,7 @@
 #include <QCharRef>
 #include <QChar>
 #include <QDir>
+#include <QHash>
 
 // Local includes
 
@@ -31,12 +32,9 @@ class Typing: public QObject {
 private:
     const short WORD_LENGTH = 5;
     const short MINUTE = 60;
-    const short SIZE_OF_M_CHAR_MISTAKE_COUNTER = 256;
 
-    QString m_lang;
     QString m_codeText;
     QString m_result;
-    QString m_savePath;
     QTimer *m_timer_0 = new QTimer();
     QThread m_qThread_0;
     QTimer *m_timer_1 = new QTimer();
@@ -45,17 +43,19 @@ private:
     QThread m_qThread_2;
     QObject *m_timeLabel;
     QObject *m_userProgress = new UserProgress();
-    UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
     QObject *m_userSpeedLabel;
-    File *m_selectedFile = nullptr;
+    QHash<QChar, int> m_charMistakeCounter;
+    QHash<QString, QString> m_languageTable;
+    UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
+    TFile *m_selectedFile = nullptr;
+    TFolder *m_saveFolder = new TFolder("save", QDir::currentPath());
     int m_triggerCount = 0;
     int m_timeDuration = MINUTE;
-    int m_charMistakeCounter[256] = {};
-    int m_mistakeCounter = 0;
     int m_userSpeed = 0;
     int m_lengthOfTypedText = 0;
 
     void determineNextWord(int index);
+    void initLanguageTable();
 
 public:
     Typing();
@@ -65,17 +65,18 @@ public slots:
     QString getLnag();
     QString getCodeText();
     QString getResult();
-    QString getSavePath();
+    QObject *getSaveFolder();
     QObject *getUserProgress();
     int getTimeDuration();
     bool isTested();
 
     void setTimeLabel(QObject *timeLabel);
     void setUserSpeedLabel(QObject *userSpeedLabel);
-    void setSelectedFile(File *selectedFile);
+    void setSelectedFile(TFile *selectedFile);
     void setTimeDuration(int timeDurationInMinutes);
 
-    bool saveFile(QString name, QString lang, QString codeText);
+    void saveFile(QString name, QString lang, QString codeText);
+    void saveFile(QString name, QString lang, QString codeText, QString path);
     void loadFile();
 
     void startTimers();

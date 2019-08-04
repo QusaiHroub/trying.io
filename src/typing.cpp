@@ -34,8 +34,7 @@ Typing::Typing() {
     m_timer_2->setInterval(250);
     m_timer_2->stop();
 
-    m_savePath = QDir::currentPath() + "\\save\\";
-    File::createFolder(m_savePath);
+    initLanguageTable();
 }
 
 Typing::~Typing() {
@@ -69,11 +68,14 @@ void Typing::timerSlot_2() {
     m_userSpeedLabel->setProperty("text", m_userSpeed);
 }
 
-bool Typing::saveFile(QString name, QString lang, QString codeText) {
-    File newFile(name, lang, m_savePath);
+void Typing::saveFile(QString name, QString lang, QString codeText) {
+    saveFile(name, lang, codeText, m_saveFolder->getFullPath());
+}
+
+void Typing::saveFile(QString name, QString lang, QString codeText, QString path) {
+    TFile newFile(name, lang, path);
     newFile.setContent(codeText);
     newFile.saveFile();
-    return true;
 }
 
 void Typing::loadFile() {
@@ -82,7 +84,7 @@ void Typing::loadFile() {
 }
 
 QString Typing::getLnag() {
-    return m_lang;
+    return m_languageTable[m_selectedFile->getExtension()];;
 }
 
 QString Typing::getCodeText() {
@@ -93,17 +95,12 @@ QString Typing::getCodeText() {
 QString Typing::getResult() {
     m_result = QString();
     m_result += "Typing Speed: " + QString::number(m_userSpeed) + " word per minutes.\n\n";
-    m_result += "Number of Errors: " + QString::number(m_mistakeCounter) + "\n\n";
-    if (m_mistakeCounter) {
+    m_result += "Number of Errors: " + QString::number(m_charMistakeCounter.size()) + "\n\n";
+    if (m_charMistakeCounter.size()) {
         m_result += "List of Errors:\n\n";
-        int numberOfProcessedMistakes = 0;
-        for (short i = 1; i < SIZE_OF_M_CHAR_MISTAKE_COUNTER &&
-             numberOfProcessedMistakes < m_mistakeCounter; i++) {
-            if (m_charMistakeCounter[int(i)]) {
-                m_result += char(i);
-                m_result += ": Number of mistakes " + QString::number(m_charMistakeCounter[int(i)]) + "\n";
-                numberOfProcessedMistakes++;
-            }
+        for (auto it = m_charMistakeCounter.begin(); it != m_charMistakeCounter.end(); it++) {
+            m_result += it.key();
+            m_result += ": Number of mistakes " + QString::number(it.value()) + "\n";
         }
     }
 
@@ -114,8 +111,8 @@ QObject *Typing::getUserProgress() {
     return m_userProgress;
 }
 
-QString Typing::getSavePath() {
-    return m_savePath;
+QObject *Typing::getSaveFolder() {
+    return m_saveFolder;
 }
 
 int Typing::getTimeDuration() {
@@ -134,8 +131,8 @@ void Typing::setUserSpeedLabel(QObject *userSpeedLabel) {
     m_userSpeedLabel = userSpeedLabel;
 }
 
-void Typing::setSelectedFile(File *selectedFile) {
-    m_selectedFile = selectedFile;
+void Typing::setSelectedFile(TFile *selectedFile) {
+    m_selectedFile =selectedFile;
 }
 
 void Typing::setTimeDuration(int timeDurationInMinutes) {
@@ -162,6 +159,7 @@ void Typing::freePtr() {
     delete m_timer_0;
     delete m_timer_1;
     delete m_timer_2;
+    delete m_saveFolder;
 }
 
 void Typing::updateUserProgress(QString typedText) {
@@ -173,8 +171,7 @@ void Typing::updateUserProgress(QString typedText) {
             if (!m_userPro->isUserMadeMistake()) {
                 m_userPro->setIsUserMadeMistake(true);
                 m_userPro->setIndexOfFirstMistakeOfUser(index);
-                m_mistakeCounter++;
-                m_charMistakeCounter[m_codeText[index].unicode()]++;
+                m_charMistakeCounter[m_codeText[index]]++;
 
                 m_lengthOfTypedText = m_userPro->getIndexOfFirstMistakeOfUser();
             }
@@ -196,15 +193,14 @@ void Typing::updateUserProgress(QString typedText) {
 
     // To determine start and end of next word.
     determineNextWord(endPoint);
-
 }
 
 // Calculate user speed.
 void Typing::calcUserSpeed() {
-    double speed = (double(m_lengthOfTypedText) / double(WORD_LENGTH))
-            / (double(m_triggerCount) / MINUTE);
+    long double speed = (static_cast<long double>(m_lengthOfTypedText) / static_cast<long double>(WORD_LENGTH))
+            / (static_cast<long double>(m_triggerCount) / MINUTE);
     m_userSpeed = int(speed);
-    if (speed - m_userSpeed > 0.499) {
+    if (speed - m_userSpeed > 0.499l) {
         m_userSpeed++;
     }
     if (m_userSpeed < 0) {
@@ -213,13 +209,24 @@ void Typing::calcUserSpeed() {
 }
 
 void Typing::initGlobalVarOfUserProgress() {
-    for (int i = 0; i < SIZE_OF_M_CHAR_MISTAKE_COUNTER; i++) {
-        m_charMistakeCounter[i] = 0;
-    }
-    m_mistakeCounter = 0;
+    m_charMistakeCounter.clear();
     m_userSpeed = 0;
     m_lengthOfTypedText = 0;
 }
+
+void Typing::initLanguageTable() {
+    QString langList[] = {"C", "C++", "Java"};
+    QList<QString> langEx[] = {{"c", "h"},
+                               {"cc", "cpp", "cxx", "c++", "hh", "hpp", "hxx", "h++"},
+                               {"java"}};
+
+    for(int i = 0; i < 3; i++) {
+        for (QList<QString>::Iterator it = langEx[i].begin(); it != langEx[i].end(); it++) {
+            m_languageTable[*it] = langList[i];
+        }
+    }
+}
+
 
 void Typing::determineNextWord(int index) {
     if (m_codeText[index] == ' ' || m_codeText[index] == '\n') {

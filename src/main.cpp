@@ -33,6 +33,12 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("Trying.io");
 
     /*!
+     * \brief QCoreApplication::setApplicationVersion
+     * This property holds the version of this application.
+     */
+    QCoreApplication::setApplicationVersion("0.2");
+
+    /*!
      * \brief engine
      * To provide a convenient way to load a single QML file.
      */
@@ -66,7 +72,19 @@ int main(int argc, char *argv[]) {
      * \brief qmlRegisterType<File>
      * Register File as new qml Type.
      */
-    qmlRegisterType<File>("trying.io.file", 0, 2, "File");
+    qmlRegisterType<File>("trying.io.pFile", 0, 2, "File");
+
+    /*!
+     * \brief qmlRegisterType<TFile>
+     * Register TFile as new qml Type.
+     */
+    qmlRegisterType<TFile>("trying.io.file", 0, 2, "TFile");
+
+    /*!
+     * \brief qmlRegisterType<TFolder>
+     * Register TFolder as new qml Type.
+     */
+    qmlRegisterType<TFolder>("trying.io.folder", 0, 2, "TFolder");
 
     /*!
      * \brief url
