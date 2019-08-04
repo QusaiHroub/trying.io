@@ -216,11 +216,10 @@ void Typing::initGlobalVarOfUserProgress() {
 
 void Typing::initLanguageTable() {
     QString langList[] = {"C", "C++", "Java"};
-    QList<QString> langEx[] = {
-                               {"c", "h"},
+    QList<QString> langEx[] = {{"c", "h"},
                                {"cc", "cpp", "cxx", "c++", "hh", "hpp", "hxx", "h++"},
-                               {"java"}
-                              };
+                               {"java"}};
+
     for(int i = 0; i < 3; i++) {
         for (QList<QString>::Iterator it = langEx[i].begin(); it != langEx[i].end(); it++) {
             m_languageTable[*it] = langList[i];

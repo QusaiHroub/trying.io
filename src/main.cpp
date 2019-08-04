@@ -70,10 +70,20 @@ int main(int argc, char *argv[]) {
 
     /*!
      * \brief qmlRegisterType<File>
-     * Register File & TFile & TFolder as new qml Type.
+     * Register File as new qml Type.
      */
     qmlRegisterType<File>("trying.io.pFile", 0, 2, "File");
+
+    /*!
+     * \brief qmlRegisterType<TFile>
+     * Register TFile as new qml Type.
+     */
     qmlRegisterType<TFile>("trying.io.file", 0, 2, "TFile");
+
+    /*!
+     * \brief qmlRegisterType<TFolder>
+     * Register TFolder as new qml Type.
+     */
     qmlRegisterType<TFolder>("trying.io.folder", 0, 2, "TFolder");
 
     /*!

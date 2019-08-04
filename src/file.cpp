@@ -73,6 +73,7 @@ void TFile::loadAll() {
     if (!m_file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         return;
     }
+
     m_contentOfFile = m_file->readAll();
 
     m_file->close();
@@ -138,7 +139,6 @@ QVariantList TFolder::scanForFiles() {
     while (iter.hasNext()) {
         QString next = iter.next();
         QString base = iter.fileName();
-        QString path = iter.path();
         QString extetension;
 
         if (base == "." || base == "..") {
@@ -150,11 +150,12 @@ QVariantList TFolder::scanForFiles() {
                 base.remove(base.length() - 1,1);
                 break;
             }
+
             extetension.insert(0, base[base.length() - 1]);
             base.remove(base.length() - 1,1);
         }
 
-        File *file = new TFile(base, extetension, path);
+        File *file = new TFile(base, extetension, iter.path());
         item.setValue(file);
         list.append(item);
     }
@@ -177,13 +178,12 @@ QVariantList TFolder::scanForDirectories() {
     while (iter.hasNext()) {
         QString next = iter.next();
         QString base = iter.fileName();
-        QString path = iter.path();
 
         if (base == "." || base == "..") {
             continue;
         }
 
-        File *folder = new TFolder(base, path);
+        File *folder = new TFolder(base, iter.path());
         item.setValue(folder);
         list.append(item);
     }

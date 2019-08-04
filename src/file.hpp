@@ -10,6 +10,8 @@
 #ifndef FILE_HPP
 #define FILE_HPP
 
+// Qt includes
+
 #include <QObject>
 #include <QFile>
 #include <QString>

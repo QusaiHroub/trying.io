@@ -15,6 +15,8 @@
 #include <QObject>
 #include <QString>
 
+// Local includes
+
 #include "file.hpp"
 
 class History: public QObject {
