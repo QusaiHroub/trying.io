@@ -35,7 +35,6 @@ private:
 
     QString m_codeText;
     QString m_result;
-    QString m_savePath;
     QTimer *m_timer_0 = new QTimer();
     QThread m_qThread_0;
     QTimer *m_timer_1 = new QTimer();
@@ -48,7 +47,8 @@ private:
     QHash<QChar, int> m_charMistakeCounter;
     QHash<QString, QString> m_languageTable;
     UserProgress *m_userPro = dynamic_cast<UserProgress *>(m_userProgress);
-    File *m_selectedFile = nullptr;
+    TFile *m_selectedFile = nullptr;
+    TFolder *m_saveFolder = new TFolder("save", QDir::currentPath());
     int m_triggerCount = 0;
     int m_timeDuration = MINUTE;
     int m_userSpeed = 0;
@@ -65,14 +65,14 @@ public slots:
     QString getLnag();
     QString getCodeText();
     QString getResult();
-    QString getSavePath();
+    QObject *getSaveFolder();
     QObject *getUserProgress();
     int getTimeDuration();
     bool isTested();
 
     void setTimeLabel(QObject *timeLabel);
     void setUserSpeedLabel(QObject *userSpeedLabel);
-    void setSelectedFile(File *selectedFile);
+    void setSelectedFile(TFile *selectedFile);
     void setTimeDuration(int timeDurationInMinutes);
 
     bool saveFile(QString name, QString lang, QString codeText);

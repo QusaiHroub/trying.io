@@ -70,9 +70,10 @@ int main(int argc, char *argv[]) {
 
     /*!
      * \brief qmlRegisterType<File>
-     * Register File as new qml Type.
+     * Register TFile & TFolder as new qml Type.
      */
-    qmlRegisterType<File>("trying.io.file", 0, 2, "File");
+    qmlRegisterType<TFile>("trying.io.file", 0, 2, "TFile");
+    qmlRegisterType<TFolder>("trying.io.folder", 0, 2, "TFolder");
 
     /*!
      * \brief url

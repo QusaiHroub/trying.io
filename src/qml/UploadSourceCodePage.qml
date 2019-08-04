@@ -13,6 +13,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.12
 
 import trying.io.typing 0.2
+import trying.io.folder 0.2
 import trying.io.file 0.2
 
 Item {
@@ -32,6 +33,11 @@ Item {
         property var tempFiles: [];
         property var folderList: [];
         property var language : ["c", "cpp", "java"]
+        property TFolder folder;
+    }
+
+    Component.onCompleted: {
+        internal.folder = typing.getSaveFolder();
     }
 
     function init() {
@@ -46,9 +52,9 @@ Item {
     }
 
     function initSaveAs() {
-        internal.currentPath = typing.getSavePath();
+        internal.folder = typing.getSaveFolder();
+        internal.currentPath = internal.folder.getFullPath();
         currnetFolderPath.text = internal.currentPath;
-        file.initFile("", "", internal.currentPath, false);
         refresh();
     }
 
@@ -73,12 +79,8 @@ Item {
     function refresh() {
         listView.currentIndex = -1;
         listView.model = 0;
-        internal.folderList = file.scanForDirectories();
+        internal.folderList = internal.folder.scanForDirectories();
         listView.model = internal.folderList.length;
-    }
-
-    File {
-        id: file
     }
 
     Timer {
@@ -87,7 +89,7 @@ Item {
         running: true
         repeat: true
         onTriggered: {
-            internal.tempFiles = file.scanForDirectories();
+            internal.tempFiles = internal.folder.scanForDirectories();
             if (internal.tempFiles.length !== internal.folderList.length) {
                 refresh();
             } else {
@@ -323,7 +325,7 @@ Item {
 
                                 Text {
                                     id: currnetFolderPath
-                                    text: qsTr(typing.getSavePath())
+                                    text: qsTr(internal.currentPath)
                                     wrapMode: Text.WrapAnywhere
                                     width: swipeView.width - swipeView.width * 0.16 - 180
                                     verticalAlignment: Text.AlignVCenter

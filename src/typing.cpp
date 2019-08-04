@@ -34,9 +34,6 @@ Typing::Typing() {
     m_timer_2->setInterval(250);
     m_timer_2->stop();
 
-    m_savePath = QDir::currentPath() + "\\save\\";
-    File::createFolder(m_savePath);
-
     initLanguageTable();
 }
 
@@ -72,7 +69,7 @@ void Typing::timerSlot_2() {
 }
 
 bool Typing::saveFile(QString name, QString lang, QString codeText) {
-    File newFile(name, lang, m_savePath);
+    TFile newFile(name, lang, m_saveFolder->getFullPath());
     newFile.setContent(codeText);
     newFile.saveFile();
     return true;
@@ -111,8 +108,8 @@ QObject *Typing::getUserProgress() {
     return m_userProgress;
 }
 
-QString Typing::getSavePath() {
-    return m_savePath;
+QObject *Typing::getSaveFolder() {
+    return m_saveFolder;
 }
 
 int Typing::getTimeDuration() {
@@ -131,8 +128,8 @@ void Typing::setUserSpeedLabel(QObject *userSpeedLabel) {
     m_userSpeedLabel = userSpeedLabel;
 }
 
-void Typing::setSelectedFile(File *selectedFile) {
-    m_selectedFile = selectedFile;
+void Typing::setSelectedFile(TFile *selectedFile) {
+    m_selectedFile =selectedFile;
 }
 
 void Typing::setTimeDuration(int timeDurationInMinutes) {
@@ -159,6 +156,7 @@ void Typing::freePtr() {
     delete m_timer_0;
     delete m_timer_1;
     delete m_timer_2;
+    delete m_saveFolder;
 }
 
 void Typing::updateUserProgress(QString typedText) {
@@ -192,7 +190,6 @@ void Typing::updateUserProgress(QString typedText) {
 
     // To determine start and end of next word.
     determineNextWord(endPoint);
-
 }
 
 // Calculate user speed.

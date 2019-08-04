@@ -16,6 +16,7 @@ import trying.io.typing 0.2
 import trying.io.userprogress 0.2
 import trying.io.history 0.2
 import trying.io.file 0.2
+import trying.io.folder 0.2
 
 Item {
     width: 1690
@@ -38,9 +39,11 @@ Item {
         property var files;
         property var filesList: [];
         property var language : ["c", "cpp", "java"];
+        property TFolder folder;
     }
 
     Component.onCompleted: {
+        internal.folder = typing.getSaveFolder();
         typing.setTimeLabel(time);
         typing.setUserSpeedLabel(userSpeed)
         userProgress = typing.getUserProgress();
@@ -60,8 +63,9 @@ Item {
     }
 
     function init() {
+        internal.folder = typing.getSaveFolder();
         languageComboBox.currentIndex = 0;
-        internal.currentPath = typing.getSavePath();
+        internal.currentPath = internal.folder.getFullPath();
         currnetFolderPath.text = internal.currentPath;
         file.initFile("", "", internal.currentPath, false);
         filter();
@@ -122,7 +126,10 @@ Item {
     function filter() {
         listView.currentIndex = -1;
         listView.model = 0;
-        internal.files = file.scanForFiles();
+        if (internal.folder == null) {
+            internal.folder = typing.getSaveFolder();
+        }
+        internal.files = internal.folder.scanForFiles();
         internal.filesList = [];
 
         for (var i in internal.files) {
@@ -131,7 +138,7 @@ Item {
             }
         }
 
-        internal.files = file.scanForDirectories();
+        internal.files = internal.folder.scanForDirectories();
 
         for (var it in internal.files) {
             internal.filesList.push(internal.files[it]);
@@ -140,7 +147,7 @@ Item {
         listView.model = internal.filesList.length;
     }
 
-    File {
+    TFile {
         id: file
     }
 
@@ -291,7 +298,7 @@ Item {
 
                                 Text {
                                     id: currnetFolderPath
-                                    text: qsTr(typing.getSavePath())
+                                    text: qsTr(internal.currentPath)
                                     wrapMode: Text.WrapAnywhere
                                     width: swipeView.width - swipeView.width * 0.16 - 180
                                     verticalAlignment: Text.AlignVCenter
@@ -483,6 +490,7 @@ Item {
                                 text: qsTr("")
                                 horizontalAlignment: Text.AlignLeft
                                 font.pixelSize: 20
+                                enabled: false
                             }
 
                             ScrollBar.vertical: ScrollBar { }
