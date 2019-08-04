@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>qml/mainWindow.qml</file>
         <file>image/background.png</file>
-	<file>image/icon.png</file>
+        <file>image/icon.png</file>
         <file>qml/TButton.qml</file>
         <file>qml/T2Button.qml</file>
         <file>qml/WelcomePage.qml</file>
@@ -10,5 +10,6 @@
         <file>qml/PracticeAndResultPage.qml</file>
         <file>qml/HistoryPage.qml</file>
         <file>qml/AboutPage.qml</file>
+        <file>qml/T3Button.qml</file>
     </qresource>
 </RCC>

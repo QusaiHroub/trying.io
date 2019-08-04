@@ -68,11 +68,14 @@ void Typing::timerSlot_2() {
     m_userSpeedLabel->setProperty("text", m_userSpeed);
 }
 
-bool Typing::saveFile(QString name, QString lang, QString codeText) {
-    TFile newFile(name, lang, m_saveFolder->getFullPath());
+void Typing::saveFile(QString name, QString lang, QString codeText) {
+    saveFile(name, lang, codeText, m_saveFolder->getFullPath());
+}
+
+void Typing::saveFile(QString name, QString lang, QString codeText, QString path) {
+    TFile newFile(name, lang, path);
     newFile.setContent(codeText);
     newFile.saveFile();
-    return true;
 }
 
 void Typing::loadFile() {
@@ -194,10 +197,10 @@ void Typing::updateUserProgress(QString typedText) {
 
 // Calculate user speed.
 void Typing::calcUserSpeed() {
-    double speed = (double(m_lengthOfTypedText) / double(WORD_LENGTH))
-            / (double(m_triggerCount) / MINUTE);
+    long double speed = (static_cast<long double>(m_lengthOfTypedText) / static_cast<long double>(WORD_LENGTH))
+            / (static_cast<long double>(m_triggerCount) / MINUTE);
     m_userSpeed = int(speed);
-    if (speed - m_userSpeed > 0.499) {
+    if (speed - m_userSpeed > 0.499l) {
         m_userSpeed++;
     }
     if (m_userSpeed < 0) {

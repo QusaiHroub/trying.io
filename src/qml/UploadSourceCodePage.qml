@@ -29,11 +29,12 @@ Item {
         readonly property int baseWidth: 1690
         readonly property int baseHeight: 1051
 
-        property string currentPath;
         property var tempFiles: [];
         property var folderList: [];
         property var language : ["c", "cpp", "java"]
         property TFolder folder;
+        property var stack: [];
+        property var rStack: [];
     }
 
     Component.onCompleted: {
@@ -53,8 +54,11 @@ Item {
 
     function initSaveAs() {
         internal.folder = typing.getSaveFolder();
-        internal.currentPath = internal.folder.getFullPath();
-        currnetFolderPath.text = internal.currentPath;
+        currnetFolderPath.text = internal.folder.getFullPath();
+        internal.stack = [];
+        internal.rStack = [];
+        rButton.enabled = false;
+        lButton.enabled = false;
         refresh();
     }
 
@@ -71,7 +75,8 @@ Item {
             return;
         }
 
-        typing.saveFile(fileName.text, internal.language[languageComboBox.currentIndex], editor.text);
+        typing.saveFile(fileName.text, internal.language[languageComboBox.currentIndex],
+                        editor.text, internal.folder.getFullPath());
         initComponent();
         refreshTimer.stop();
     }
@@ -81,6 +86,32 @@ Item {
         listView.model = 0;
         internal.folderList = internal.folder.scanForDirectories();
         listView.model = internal.folderList.length;
+    }
+
+    function scanFolder(folder) {
+        internal.stack.push(internal.folder);
+        internal.rStack = [];
+        internal.folder = folder;
+        currnetFolderPath.text = internal.folder.getFullPath();
+        refresh();
+        rButton.enabled = internal.stack.length > 0;
+        lButton.enabled = internal.rStack.length > 0;
+    }
+
+    function rScanFolder(folder) {
+        internal.stack.push(internal.folder);
+        internal.rStack.pop();
+        internal.folder = folder;
+        currnetFolderPath.text = internal.folder.getFullPath();
+        refresh();
+    }
+
+    function lScanFolder(folder) {
+        internal.rStack.push(internal.folder);
+        internal.stack.pop();
+        internal.folder = folder;
+        currnetFolderPath.text = internal.folder.getFullPath();
+        refresh();
     }
 
     Timer {
@@ -134,6 +165,31 @@ Item {
         }
     }
 
+    Dialog {
+        id: newFolderDialog
+        title: "New folder"
+        height: 150
+        width: 300
+        standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+        Column {
+            anchors.fill: parent
+            Text {
+                text: "Name"
+                height: 40
+            }
+            TextField {
+                id: newFolderInput
+                width: parent.width * 0.75
+                focus: true
+            }
+        }
+
+        onAccepted: {
+            internal.folder.createFolder(internal.folder.getFullPath() + "/" + newFolderInput.text);
+        }
+    }
+
     Rectangle {
         color: "#d9ffffff"
         border.color: "#3f51b5"
@@ -168,8 +224,6 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         font.pixelSize: 24
                     }
-
-
 
                     Rectangle {
                         height: parent.height - 110
@@ -305,17 +359,29 @@ Item {
                                 height: parent.height
 
                                 TButton {
+                                    id: rButton
                                     height: parent.height
                                     width: height
                                     text: "<"
                                     enabled: false
+                                    onClicked: {
+                                        lScanFolder(internal.stack[internal.stack.length - 1]);
+                                        enabled = internal.stack.length > 0;
+                                        lButton.enabled = internal.rStack.length > 0;
+                                    }
                                 }
 
                                 TButton {
+                                    id: lButton
                                     height: parent.height
                                     width: height
                                     text: ">"
                                     enabled: false
+                                    onClicked: {
+                                        rScanFolder(internal.rStack[internal.rStack.length - 1]);
+                                        enabled = internal.rStack.length > 0;
+                                        rButton.enabled = internal.stack.length > 0;
+                                    }
                                 }
 
                                 Item {
@@ -325,7 +391,7 @@ Item {
 
                                 Text {
                                     id: currnetFolderPath
-                                    text: qsTr(internal.currentPath)
+                                    text: qsTr(internal.folder.getFullPath())
                                     wrapMode: Text.WrapAnywhere
                                     width: swipeView.width - swipeView.width * 0.16 - 180
                                     verticalAlignment: Text.AlignVCenter
@@ -353,14 +419,14 @@ Item {
                             anchors.topMargin: 8
                             anchors.fill: parent
                             clip: true
-                            enabled: false
 
-                            delegate: T2Button {
+                            delegate: T3Button {
                                 width: 133
                                 height: 133
+                                noteColor: internal.folderList[index] instanceof TFile? "#009688" : "#f44336";
                                 text: internal.folderList !== undefined ? internal.folderList[index].getName() : "";
                                 onClicked: {
-                                    listView.currentIndex = index
+                                    scanFolder(internal.folderList[index]);
                                 }
                             }
 
@@ -396,9 +462,8 @@ Item {
                                 width: 200
                                 height: parent.height
                                 text: "Create new folder"
-                                enabled: false
                                 onClicked: {
-
+                                    newFolderDialog.open();
                                 }
                             }
                         }

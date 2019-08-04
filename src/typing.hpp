@@ -75,7 +75,8 @@ public slots:
     void setSelectedFile(TFile *selectedFile);
     void setTimeDuration(int timeDurationInMinutes);
 
-    bool saveFile(QString name, QString lang, QString codeText);
+    void saveFile(QString name, QString lang, QString codeText);
+    void saveFile(QString name, QString lang, QString codeText, QString path);
     void loadFile();
 
     void startTimers();
