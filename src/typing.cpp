@@ -35,6 +35,7 @@ Typing::Typing() {
     m_timer_2->stop();
 
     initLanguageTable();
+    m_saveFolder->create();
 }
 
 Typing::~Typing() {
