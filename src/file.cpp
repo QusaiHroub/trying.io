@@ -8,6 +8,11 @@
 */
 
 #include "file.hpp"
+
+#include <iostream>
+
+using namespace std;
+
 File::File() {
 
 }
@@ -192,6 +197,7 @@ QVariantList TFolder::scanForDirectories() {
 }
 
 void TFolder::createFolder(QString path) {
+    cout << "called" << endl;
     QDir dir(path);
 
     // Create folder if it not exists.

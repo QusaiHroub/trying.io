@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/mainWindow.qml</file>
-        <file>image/background.png</file>
         <file>image/icon.png</file>
         <file>qml/TButton.qml</file>
         <file>qml/T2Button.qml</file>
@@ -11,5 +10,6 @@
         <file>qml/HistoryPage.qml</file>
         <file>qml/AboutPage.qml</file>
         <file>qml/T3Button.qml</file>
+        <file>image/background.jpg</file>
     </qresource>
 </RCC>

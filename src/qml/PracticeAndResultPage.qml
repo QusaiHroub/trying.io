@@ -26,6 +26,8 @@ Item {
     property Typing typing;
     property UserProgress userProgress;
 
+    signal fin;
+
     QtObject {
         id: internal
 
@@ -129,6 +131,7 @@ Item {
         userHistory.loadHistory();
         userHistory.append(result.text, userProgress.getDateAndTime());
         userHistory.saveHistory();
+        fin();
     }
 
     function filter() {
@@ -514,6 +517,7 @@ Item {
                         }
 
                         Row {
+                            id: row
                             anchors.horizontalCenter: parent.horizontalCenter
                             spacing: 4
 
@@ -569,7 +573,10 @@ Item {
                                 text: qsTr("")
                                 horizontalAlignment: Text.AlignLeft
                                 font.pixelSize: 20
-                                enabled: false
+                                readOnly: true
+                                selectionColor: "#3f51b5"
+
+
                             }
 
                             ScrollBar.vertical: ScrollBar { }
@@ -607,6 +614,7 @@ Item {
                                         if (userProgress.isUserMadeMistake()) {
                                             codeView.select(userProgress.getIndexOfFirstMistakeOfUser(),
                                                             userProgress.getIndexOfFirstMistakeOfUser() + 1);
+                                            codeView.selectionColor = "red"
                                         } else {
                                             codeView.select(userProgress.getStartIndexOfNextWord(),
                                                             userProgress.getEndIndexOfNextWord());

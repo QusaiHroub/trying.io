@@ -39,7 +39,7 @@ Window {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/image/background.png"
+        source: "qrc:/image/background.jpg"
     }
 
     Typing {
@@ -166,6 +166,9 @@ Window {
                 id: practiceAndResultPage
                 mainWindow: mainWindow
                 typing: typing
+                onFin: {
+                    swipeView1.currentIndex = 0;
+                }
             }
 
             HistoryPage {
