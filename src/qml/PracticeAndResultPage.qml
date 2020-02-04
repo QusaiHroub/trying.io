@@ -53,6 +53,7 @@ Item {
         typing.setTimeLabel(time);
         typing.setUserSpeedLabel(userSpeed)
         userProgress = typing.getUserProgress();
+        codeView.selectionColor = "3f51b5"
     }
 
     function initComponets() {
@@ -618,6 +619,7 @@ Item {
                                         } else {
                                             codeView.select(userProgress.getStartIndexOfNextWord(),
                                                             userProgress.getEndIndexOfNextWord());
+                                            codeView.selectionColor = "3f51b5"
                                         }
                                     }
                                 }
